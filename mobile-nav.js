@@ -112,7 +112,7 @@
     function registerPWA() {
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
+                navigator.serviceWorker.register('./sw.js?v=2.0.0')
                     .then(r => console.log('✅ Graha Tracker PWA:', r.scope))
                     .catch(e => console.warn('SW skipped:', e.message));
             });

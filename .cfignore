@@ -1,0 +1,8 @@
+.git/
+.gitignore
+.cfignore
+node_modules/
+.vscode/
+.idea/
+README.md
+*.log

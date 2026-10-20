@@ -127,75 +127,76 @@
     }
   </style>
 </head>
-<body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen">
+<body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen selection:bg-primary-container/20 selection:text-primary">
   <!-- Top Navigation Header -->
-  <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe border-b border-[rgba(197,152,32,0.2)]">
-    <div class="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
-      <a href="index.html" class="flex items-center gap-space-sm min-w-0 text-inherit no-underline">
-        <img src="logo.svg" alt="Graha Tracker Emblem" class="w-11 h-11 rounded-full shrink-0 shadow-[0_2px_8px_rgba(197,152,32,0.3)] object-contain"/>
+  <header class="fixed top-0 w-full z-50 bg-[#ffffff]/92 backdrop-blur-xl shadow-[0_2px_12px_rgba(35,35,62,0.05)] pt-safe border-b border-[rgba(197,152,32,0.2)]">
+    <div class="h-16 px-3 sm:px-4 flex items-center justify-between gap-2 max-w-2xl mx-auto">
+      <a href="index.html" class="flex items-center gap-2 text-inherit no-underline min-w-0">
+        <img src="logo.svg" alt="Graha Tracker Emblem" class="w-9 h-9 rounded-full shrink-0 shadow-sm object-contain"/>
         <div class="flex flex-col min-w-0">
-          <span class="font-headline-sm text-headline-sm text-cosmic-slate font-bold truncate leading-tight">Graha Tracker</span>
-          <span class="font-label-sm text-label-sm text-primary uppercase tracking-widest leading-none font-semibold">ग्रह मंडल • Jyotisha</span>
+          <span class="font-headline-sm text-sm sm:text-base text-cosmic-slate font-bold truncate leading-tight">Graha Tracker</span>
+          <span class="text-[10px] sm:text-xs text-primary font-semibold tracking-wider leading-none">ग्रह मंडल • JYOTISHA</span>
         </div>
       </a>
-      <div class="flex items-center gap-space-xs shrink-0">
+      <div class="flex items-center gap-1.5 shrink-0">
         <div class="flex items-center p-0.5 rounded-full bg-parchment-container shadow-[inset_0_1px_2px_rgba(35,35,62,0.08)]">
-          <button id="lang-eng-btn" class="px-2.5 py-1 rounded-full font-label-sm text-label-sm font-semibold bg-primary-container text-on-primary shadow-sm" type="button">ENG</button>
-          <button id="lang-hin-btn" class="px-2.5 py-1 rounded-full font-label-sm text-label-sm font-medium text-muted-lavender hover:text-cosmic-slate" type="button">हिंदी</button>
+          <button id="lang-eng-btn" class="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary-container text-on-primary shadow-sm" type="button">ENG</button>
+          <button id="lang-hin-btn" class="px-2 py-0.5 rounded-full text-xs font-medium text-muted-lavender hover:text-cosmic-slate" type="button">हिंदी</button>
         </div>
-        <button id="night-mode-btn" aria-label="Night Vision Mode" class="w-10 h-10 flex items-center justify-center rounded-full text-cosmic-slate hover:bg-parchment-container transition-colors" type="button">
-          <span class="material-symbols-outlined text-[20px]">visibility</span>
+        <button id="night-mode-btn" aria-label="Night Vision Mode" class="w-8 h-8 flex items-center justify-center rounded-full text-cosmic-slate hover:bg-parchment-container transition-colors" type="button" title="Night Observatory Mode">
+          <span class="material-symbols-outlined text-[18px]">visibility</span>
         </button>
-        <a class="flex items-center gap-1 h-9 px-3 rounded-full bg-surface-container-lowest text-secondary font-label-sm text-label-sm shadow-[0_1px_4px_rgba(0,106,97,0.12)] hover:bg-parchment-container transition-all" href="transit-calendar.html">
-          <span class="material-symbols-outlined text-[16px]">auto_mode</span>
-          <span class="truncate font-semibold">5-Yr Transit</span>
-          <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+        <a class="flex items-center gap-1 h-8 px-2.5 sm:px-3 rounded-full bg-surface-container-lowest text-secondary text-xs shadow-sm border border-black/5 hover:bg-parchment-container transition-all" href="transit-calendar.html">
+          <span class="material-symbols-outlined text-[15px]">auto_mode</span>
+          <span class="font-semibold hidden sm:inline">5-Yr Transit</span>
+          <span class="font-semibold sm:hidden">5-Yr</span>
+          <span class="material-symbols-outlined text-[13px]">arrow_forward</span>
         </a>
       </div>
     </div>
   </header>
 
   <!-- Main Content Area -->
-  <main class="flex flex-col relative w-full pt-24 pb-28 bg-surface">
+  <main class="flex flex-col relative w-full pt-20 pb-28 bg-surface">
     <div class="w-full">
-      <div class="flex flex-col w-full px-margin-mobile sm:px-margin space-y-space-md max-w-2xl mx-auto">
+      <div class="flex flex-col w-full px-3 sm:px-4 space-y-3 sm:space-y-4 max-w-2xl mx-auto">
         
         <!-- 1. LIVE CONTROL & TELEMETRY CARD -->
-        <div class="flex flex-col w-full bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(197,152,32,0.06)] p-space-md space-y-space-sm border border-[rgba(197,152,32,0.15)]">
-          <div class="flex items-center justify-between flex-wrap gap-space-xs">
+        <div class="flex flex-col w-full bg-surface-container-lowest rounded-xl shadow-[0_4px_16px_rgba(197,152,32,0.06)] p-3 sm:p-4 space-y-2 border border-[rgba(197,152,32,0.15)]">
+          <div class="flex items-center justify-between flex-wrap gap-2">
             <!-- Live Indicator & Clock -->
-            <div class="flex items-center gap-space-xs">
-              <span class="relative flex h-2.5 w-2.5">
+            <div class="flex items-center gap-1.5 min-w-0">
+              <span class="relative flex h-2 w-2">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
               </span>
-              <span class="font-label-md text-label-md font-bold text-secondary uppercase tracking-wider">LIVE TRANSIT (गोचर)</span>
-              <span class="font-body-sm text-body-sm text-muted-lavender">|</span>
-              <span class="font-body-md text-body-md font-semibold text-cosmic-slate tracking-tight" id="live-clock">--:--:-- IST</span>
+              <span class="text-xs font-bold text-secondary uppercase tracking-wider">LIVE GOCHAR</span>
+              <span class="text-xs text-muted-lavender">|</span>
+              <span class="text-xs sm:text-sm font-semibold text-cosmic-slate tracking-tight" id="live-clock">--:--:-- IST</span>
             </div>
             <!-- Quick Action / Date Reset -->
-            <div class="flex items-center gap-space-xs">
-              <div class="flex items-center gap-1 bg-surface-container-low px-2.5 py-1 rounded-full text-muted-lavender border border-black/5">
-                <span class="material-symbols-outlined text-[16px] text-primary">calendar_month</span>
-                <input type="date" id="chart-date-input" class="bg-transparent border-none text-cosmic-slate font-label-sm text-label-sm font-semibold outline-none cursor-pointer p-0" title="Choose specific date to inspect transits"/>
+            <div class="flex items-center gap-1.5 ml-auto">
+              <div class="flex items-center gap-1 bg-surface-container-low px-2 py-0.5 rounded-full text-muted-lavender border border-black/5">
+                <span class="material-symbols-outlined text-[15px] text-primary">calendar_month</span>
+                <input type="date" id="chart-date-input" class="bg-transparent border-none text-cosmic-slate text-xs font-semibold outline-none cursor-pointer p-0" title="Choose specific date to inspect transits"/>
               </div>
-              <button id="reset-today-btn" class="px-3 py-1 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm font-semibold shadow-sm active:scale-95 transition-transform" type="button">
+              <button id="reset-today-btn" class="px-2.5 py-0.5 rounded-full bg-primary-container text-on-primary text-xs font-semibold shadow-sm active:scale-95 transition-transform" type="button">
                 आज Reset
               </button>
             </div>
           </div>
           
           <!-- Live Telemetry Badge -->
-          <div class="flex flex-col bg-parchment-container rounded-lg p-space-sm space-y-1 border border-[rgba(197,152,32,0.12)]">
-            <div class="flex items-center gap-1.5 flex-wrap text-cosmic-slate font-body-sm text-body-sm">
-              <span class="font-headline-sm text-headline-sm text-primary font-bold" id="lagna-title-badge">Lagna: वृश्चिक</span>
-              <span class="font-body-sm text-body-sm text-muted-lavender" id="lagna-deg-badge">(Scorpio 18°24')</span>
+          <div class="flex flex-col bg-parchment-container rounded-lg p-2.5 space-y-1 border border-[rgba(197,152,32,0.12)]">
+            <div class="flex items-center gap-1.5 flex-wrap text-cosmic-slate text-xs sm:text-sm">
+              <span class="font-headline-sm text-primary font-bold text-sm sm:text-base" id="lagna-title-badge">Lagna: वृश्चिक</span>
+              <span class="text-xs text-muted-lavender" id="lagna-deg-badge">(Scorpio 18°24')</span>
               <span class="text-primary">•</span>
-              <span class="text-on-surface font-medium" id="lagna-nak-badge">Nakshatra: Anuradha (Pada 2)</span>
+              <span class="text-on-surface font-medium text-xs" id="lagna-nak-badge">Nakshatra: Anuradha (Pada 2)</span>
               <span class="text-primary">•</span>
-              <span class="text-muted-lavender flex items-center gap-0.5"><span class="material-symbols-outlined text-[14px]">location_on</span>New Delhi, India</span>
+              <span class="text-muted-lavender flex items-center gap-0.5 text-xs"><span class="material-symbols-outlined text-[13px]">location_on</span>New Delhi</span>
             </div>
-            <div class="flex items-center justify-between text-muted-lavender font-label-sm text-label-sm pt-0.5">
+            <div class="flex items-center justify-between text-muted-lavender text-[11px] pt-1 border-t border-black/5">
               <span>Ayanamsa: <strong class="text-cosmic-slate font-semibold" id="ayanamsa-badge">Lahiri 24°11'48"</strong></span>
               <span>LST: <strong class="text-cosmic-slate font-semibold" id="lst-badge">14h 22m 04s</strong></span>
             </div>
@@ -203,71 +204,71 @@
         </div>
 
         <!-- 2. PRIMARY CENTERPIECE: VEDIC KUNDALI -->
-        <div class="flex flex-col w-full bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(197,152,32,0.06)] p-space-md space-y-space-sm border border-[rgba(197,152,32,0.15)]">
+        <div class="flex flex-col w-full bg-surface-container-lowest rounded-xl shadow-[0_4px_16px_rgba(197,152,32,0.06)] p-3 sm:p-4 space-y-2 border border-[rgba(197,152,32,0.15)]">
           <!-- Chart Header & Style Toggle -->
-          <div class="flex items-center justify-between flex-wrap gap-space-xs">
+          <div class="flex items-center justify-between flex-wrap gap-2">
             <div class="flex flex-col">
-              <span class="font-headline-sm text-headline-sm font-bold text-cosmic-slate">Lagna Kundali (लग्न चक्र)</span>
-              <span class="font-label-sm text-label-sm text-muted-lavender">Real-time planetary house placements</span>
+              <span class="font-headline-sm text-sm sm:text-base font-bold text-cosmic-slate">Lagna Kundali (लग्न चक्र)</span>
+              <span class="text-[11px] text-muted-lavender">Real-time sidereal planetary house placements</span>
             </div>
             <!-- Toggle: North vs South -->
-            <div class="flex items-center bg-surface-container-low p-1 rounded-full border border-black/5">
-              <button class="px-3 py-1 rounded-full font-label-sm text-label-sm font-semibold bg-primary-container text-on-primary shadow-sm transition-all" id="north-btn" type="button">North Indian</button>
-              <button class="px-3 py-1 rounded-full font-label-sm text-label-sm font-medium text-muted-lavender hover:text-cosmic-slate transition-all" id="south-btn" type="button">South Indian</button>
+            <div class="flex items-center bg-surface-container-low p-0.5 rounded-full border border-black/5">
+              <button class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-container text-on-primary shadow-sm transition-all" id="north-btn" type="button">North</button>
+              <button class="px-2.5 py-0.5 rounded-full text-xs font-medium text-muted-lavender hover:text-cosmic-slate transition-all" id="south-btn" type="button">South</button>
             </div>
           </div>
 
           <!-- Dynamic Kundali SVG Container -->
-          <div class="relative w-full aspect-square max-w-[420px] mx-auto bg-surface-container-lowest rounded-xl overflow-hidden flex items-center justify-center p-1 border border-[rgba(197,152,32,0.2)]" id="kundali-chart-svg">
+          <div class="relative w-full aspect-square max-w-[360px] sm:max-w-[420px] mx-auto bg-surface-container-lowest rounded-xl overflow-hidden flex items-center justify-center p-1 border border-[rgba(197,152,32,0.2)]" id="kundali-chart-svg">
             <!-- Dynamic SVG injected by graha-tracker.js -->
-            <div class="flex items-center justify-center text-muted-lavender">Loading Kundali...</div>
+            <div class="flex items-center justify-center text-xs text-muted-lavender">Loading Kundali...</div>
           </div>
 
           <!-- Chart interactive micro-caption -->
-          <div class="flex items-center justify-center gap-1.5 text-muted-lavender font-body-sm text-body-sm text-center pt-1">
-            <span class="material-symbols-outlined text-[16px] text-primary">touch_app</span>
-            <span>Real-time Lagna & sidereal house distribution calculated live</span>
+          <div class="flex items-center justify-center gap-1.5 text-muted-lavender text-xs text-center pt-0.5">
+            <span class="material-symbols-outlined text-[15px] text-primary">touch_app</span>
+            <span>Real-time Lagna &amp; sidereal house distribution calculated live</span>
           </div>
         </div>
 
         <!-- 3. NAVAGRAHA EPHEMERIS GRID -->
-        <div class="flex flex-col w-full space-y-space-sm pt-space-xs" id="navagraha">
+        <div class="flex flex-col w-full space-y-2 pt-1" id="navagraha">
           <!-- Header with count badge -->
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="font-headline-sm text-headline-sm font-bold text-cosmic-slate">NAVAGRAHA EPHEMERIS</span>
-              <span class="font-label-sm text-label-sm font-semibold text-primary uppercase">नवग्रह स्थिति</span>
+            <div class="flex items-center gap-1.5">
+              <span class="font-headline-sm text-sm sm:text-base font-bold text-cosmic-slate">NAVAGRAHA EPHEMERIS</span>
+              <span class="text-xs font-semibold text-primary uppercase">नवग्रह स्थिति</span>
             </div>
-            <span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-cosmic-slate font-label-sm text-label-sm font-semibold">
+            <span class="px-2 py-0.5 rounded-full bg-surface-container-high text-cosmic-slate text-[11px] font-semibold">
               9 Active Grahas
             </span>
           </div>
 
           <!-- 9 Graha Cards List Container (Dynamically Rendered) -->
-          <div class="flex flex-col space-y-space-sm" id="graha-cards-container">
-            <div class="p-4 text-center text-muted-lavender bg-white rounded-xl">Calculating 9 Graha positions...</div>
+          <div class="flex flex-col space-y-2" id="graha-cards-container">
+            <div class="p-4 text-center text-xs text-muted-lavender bg-white rounded-xl shadow-sm">Calculating 9 Graha positions...</div>
           </div>
         </div>
 
-        <!-- 4. QUICK INGRESS INSIGHT BANNER -->
-        <div class="flex flex-col bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(197,152,32,0.08)] p-space-md space-y-space-sm relative overflow-hidden border border-[rgba(197,152,32,0.2)]">
+        <!-- 4. 5-YEAR TRANSIT HORIZON (2026–2031) BANNER -->
+        <div class="flex flex-col bg-surface-container-lowest rounded-xl shadow-[0_4px_16px_rgba(197,152,32,0.08)] p-3 sm:p-4 space-y-2 relative overflow-hidden border border-[rgba(197,152,32,0.2)]">
           <div class="absolute -right-12 -top-12 w-36 h-36 rounded-full bg-primary-container/15 blur-2xl pointer-events-none"></div>
           <div class="flex items-center gap-2">
             <span class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-sm">
               <span class="material-symbols-outlined text-[18px]">timelapse</span>
             </span>
             <div class="flex flex-col">
-              <span class="font-title-md text-title-md text-cosmic-slate font-bold">5-Year Transit Matrix (2024–2029)</span>
-              <span class="font-label-sm text-label-sm text-muted-lavender">Major Shani Sade Sati, Guru Ingress & Rahu shifts</span>
+              <span class="text-sm sm:text-base text-cosmic-slate font-bold">5-Year Transit Matrix (2026–2031)</span>
+              <span class="text-xs text-muted-lavender">From Current Date 5 Years Forward • Shani, Guru &amp; Nodes</span>
             </div>
           </div>
-          <p class="font-body-md text-body-md text-on-surface-variant">
-            Explore 5-year timeline with day-by-day precision ingress, exact transition times, retrograde cycles (Vakri loop), and Nakshatra pāda shifts for all 9 Grahas.
+          <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+            Explore 5-year timeline from current date (2026 through 2031) with precise day-by-day sign ingresses, exact IST timestamps, retrograde (Vakri) loops, and Nakshatra pāda shifts for all 9 Grahas.
           </p>
           <div class="flex items-center justify-end pt-1">
-            <a class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md font-semibold shadow-sm hover:shadow transition-all active:scale-95" href="transit-calendar.html">
+            <a class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-on-primary text-xs sm:text-sm font-semibold shadow-sm hover:shadow transition-all active:scale-95" href="transit-calendar.html">
               <span>Open 5-Year Transit Calendar</span>
-              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+              <span class="material-symbols-outlined text-[15px]">arrow_forward</span>
             </a>
           </div>
         </div>
@@ -276,24 +277,24 @@
     </div>
   </main>
 
-  <!-- Bottom Floating Navigation -->
-  <nav class="fixed bottom-0 w-full z-50 pb-safe px-margin-mobile pb-3 pointer-events-none" data-graha-nav="custom">
-    <div class="mx-auto max-w-md h-16 rounded-full bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_10px_30px_rgba(35,35,62,0.09)] border border-[rgba(197,152,32,0.25)] px-space-sm flex items-center justify-between pointer-events-auto">
-      <a aria-current="page" class="flex flex-col items-center justify-center h-12 w-20 rounded-full transition-all gap-0.5 text-primary bg-primary-fixed/35 font-semibold" href="index.html">
-        <span class="material-symbols-outlined text-[22px]">diamond</span>
-        <span class="font-label-sm text-label-sm leading-none">Kundali</span>
+  <!-- Mobile Bottom Floating Navigation -->
+  <nav class="fixed bottom-0 w-full z-50 pb-safe px-3 pb-3 pointer-events-none" data-graha-nav="custom">
+    <div class="mx-auto max-w-sm h-14 rounded-full bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_8px_24px_rgba(35,35,62,0.12)] border border-[rgba(197,152,32,0.25)] px-2 flex items-center justify-around pointer-events-auto">
+      <a aria-current="page" class="flex flex-col items-center justify-center h-11 w-16 rounded-full text-primary bg-primary-fixed/35 font-semibold transition-all gap-0.5" href="index.html">
+        <span class="material-symbols-outlined text-[20px]">diamond</span>
+        <span class="text-[10px] font-semibold leading-none">Kundali</span>
       </a>
-      <a class="flex flex-col items-center justify-center h-12 w-20 rounded-full text-on-surface-variant hover:text-primary transition-all gap-0.5" href="#navagraha">
-        <span class="material-symbols-outlined text-[22px]">grid_view</span>
-        <span class="font-label-sm text-label-sm leading-none">Grahas</span>
+      <a class="flex flex-col items-center justify-center h-11 w-16 rounded-full text-muted-lavender hover:text-midnight-indigo transition-all gap-0.5" href="#navagraha">
+        <span class="material-symbols-outlined text-[20px]">grid_view</span>
+        <span class="text-[10px] font-semibold leading-none">Grahas</span>
       </a>
-      <a class="flex flex-col items-center justify-center h-12 w-20 rounded-full text-on-surface-variant hover:text-primary transition-all gap-0.5" href="transit-calendar.html">
-        <span class="material-symbols-outlined text-[22px]">auto_mode</span>
-        <span class="font-label-sm text-label-sm leading-none">5-Yr Gochar</span>
+      <a class="flex flex-col items-center justify-center h-11 w-20 rounded-full text-muted-lavender hover:text-midnight-indigo transition-all gap-0.5" href="transit-calendar.html">
+        <span class="material-symbols-outlined text-[20px]">auto_mode</span>
+        <span class="text-[10px] font-semibold leading-none">5-Yr Matrix</span>
       </a>
-      <a class="flex flex-col items-center justify-center h-12 w-20 rounded-full text-on-surface-variant hover:text-primary transition-all gap-0.5" href="transit-calendar.html?filter=retrograde">
-        <span class="material-symbols-outlined text-[22px]">warning</span>
-        <span class="font-label-sm text-label-sm leading-none">Vakri</span>
+      <a class="flex flex-col items-center justify-center h-11 w-16 rounded-full text-muted-lavender hover:text-midnight-indigo transition-all gap-0.5" href="transit-calendar.html?filter=retrograde">
+        <span class="material-symbols-outlined text-[20px]">warning</span>
+        <span class="text-[10px] font-semibold leading-none">Vakri</span>
       </a>
     </div>
   </nav>

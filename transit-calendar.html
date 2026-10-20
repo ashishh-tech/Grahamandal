@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
-  <title>5-Year Transit Matrix (2024–2029) — Graha Tracker (ग्रह मंडल)</title>
-  <meta name="description" content="Complete 5-year Vedic planetary ingress timeline, retrograde periods, and major Gochar epochs calculated with Lahiri Ayanamsa."/>
+  <title>5-Year Transit Matrix (2026–2031) — Graha Tracker (ग्रह मंडल)</title>
+  <meta name="description" content="5-year Vedic planetary ingress timeline, retrograde periods, and major Gochar epochs calculated from current date through 2031 with Lahiri Ayanamsa."/>
   <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
   <link rel="manifest" href="manifest.json"/>
   <meta name="theme-color" content="#fbf9f6"/>
@@ -82,30 +82,13 @@
             "xl": "0.75rem",
             "full": "9999px"
           },
-          "spacing": {
-            "gutter": "1.5rem",
-            "space-xl": "2.5rem",
-            "margin-mobile": "1rem",
-            "gutter-mobile": "0.75rem",
-            "space-xs": "0.25rem",
-            "space-sm": "0.5rem",
-            "space-md": "1rem",
-            "margin": "2rem",
-            "space-lg": "1.5rem"
-          },
           "fontFamily": {
-            "label-md": ["Inter", "sans-serif"],
             "headline-sm": ["Noto Serif", "serif"],
+            "headline-lg": ["Noto Serif", "serif"],
             "body-md": ["Inter", "sans-serif"],
             "title-md": ["Inter", "sans-serif"],
-            "headline-lg": ["Noto Serif", "serif"],
-            "body-sm": ["Inter", "sans-serif"],
-            "title-lg": ["Inter", "sans-serif"],
-            "headline-md": ["Noto Serif", "serif"],
             "label-sm": ["Inter", "sans-serif"],
-            "display-lg": ["Noto Serif", "serif"],
-            "label-lg": ["Inter", "sans-serif"],
-            "body-lg": ["Inter", "sans-serif"]
+            "label-md": ["Inter", "sans-serif"]
           }
         }
       }
@@ -124,329 +107,246 @@
       from { transform: scale(0.95); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
-    .animate-scaleUp {
-      animation: scaleUp 0.25s ease-out forwards;
-    }
+    .animate-scaleUp { animation: scaleUp 0.25s ease-out forwards; }
   </style>
 </head>
 <body class="bg-surface text-cosmic-slate font-body-md text-body-md flex flex-col min-h-screen selection:bg-primary-container/20 selection:text-primary">
   
-  <!-- Header Bar -->
-  <header class="fixed top-0 w-full z-50 pt-safe bg-[#ffffff]/90 backdrop-blur-xl border-b border-[rgba(197,152,32,0.25)] shadow-[0_4px_20px_rgba(35,35,62,0.06)]">
-    <div class="h-28 px-gutter-mobile flex flex-col justify-between py-space-xs">
-      <div class="flex items-center justify-between gap-space-sm">
-        <a href="index.html" class="flex items-center gap-space-sm text-inherit no-underline">
-          <img src="logo.svg" alt="Graha Tracker Emblem" class="w-10 h-10 rounded-full shrink-0 shadow-[0_2px_8px_rgba(197,152,32,0.3)] object-contain"/>
-          <div class="flex flex-col">
-            <span class="font-headline-sm text-[17px] text-midnight-indigo tracking-wider uppercase font-bold leading-tight">Graha Tracker</span>
-            <span class="font-label-sm text-label-sm text-[#785a00] font-semibold tracking-widest">ग्रह मंडल • EPHEMERIS</span>
-          </div>
-        </a>
-        <div class="flex items-center gap-space-xs">
-          <button id="lang-btn" aria-label="Language Toggle" class="h-9 px-space-sm rounded-lg bg-surface-container-low/90 border border-[rgba(197,152,32,0.2)] text-secondary hover:text-secondary-container transition-colors flex items-center justify-center font-label-md text-label-md tracking-wider shadow-sm" type="button">
-            <span class="font-bold text-midnight-indigo">ENG</span><span class="text-outline/40 mx-1">|</span><span class="text-secondary font-medium">हिंदी</span>
-          </button>
-          <a href="index.html" class="h-9 px-3 rounded-lg bg-primary-container text-white flex items-center gap-1 font-label-sm text-label-sm font-semibold shadow-sm hover:opacity-95 transition-all">
-            <span class="material-symbols-outlined text-[16px]">diamond</span>
-            <span class="hidden sm:inline">Live Kundali</span>
-          </a>
+  <!-- Sleek Mobile-Optimized Header -->
+  <header class="fixed top-0 w-full z-50 pt-safe bg-[#ffffff]/92 backdrop-blur-xl border-b border-[rgba(197,152,32,0.2)] shadow-[0_2px_12px_rgba(35,35,62,0.05)]">
+    <div class="h-16 px-3 sm:px-4 flex items-center justify-between gap-2 max-w-2xl mx-auto">
+      <a href="index.html" class="flex items-center gap-2 text-inherit no-underline min-w-0">
+        <img src="logo.svg" alt="Graha Tracker Emblem" class="w-9 h-9 rounded-full shrink-0 shadow-sm object-contain"/>
+        <div class="flex flex-col min-w-0">
+          <span class="font-headline-sm text-sm sm:text-base text-midnight-indigo font-bold truncate leading-tight">Graha Tracker</span>
+          <span class="text-[10px] sm:text-xs text-[#785a00] font-semibold tracking-wider leading-none">5-YR TRANSITS</span>
         </div>
-      </div>
-      <div class="flex items-center justify-between gap-space-sm overflow-x-auto no-scrollbar pt-1">
-        <div class="flex items-center gap-space-xs bg-parchment-container/90 border border-[rgba(197,152,32,0.2)] px-space-sm py-0.5 rounded-full shadow-sm">
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
-          </span>
-          <span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase font-bold">5-YEAR MATRIX</span>
-          <span class="text-outline/40 text-label-sm">•</span>
-          <span class="font-label-sm text-label-sm text-midnight-indigo font-medium">Vedic Chronosphere</span>
-        </div>
-        <a class="flex items-center gap-1 text-primary hover:text-primary-container transition-colors font-label-sm text-label-sm tracking-wide font-semibold" href="index.html">
-          <span class="font-bold">← Back to Live Dashboard</span>
+      </a>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <a href="index.html" class="h-8 px-2.5 rounded-full bg-parchment-container text-primary flex items-center gap-1 text-xs font-semibold shadow-sm hover:bg-surface-container-high transition-all">
+          <span class="material-symbols-outlined text-[15px]">diamond</span>
+          <span class="truncate">Live Kundali</span>
         </a>
       </div>
     </div>
   </header>
 
   <!-- Main Ephemeris View -->
-  <main class="flex flex-col relative w-full pt-32 pb-24 bg-surface min-h-screen">
-    <div class="flex flex-col w-full px-margin-mobile gap-space-md max-w-2xl mx-auto">
+  <main class="flex flex-col relative w-full pt-20 pb-28 bg-surface min-h-screen">
+    <div class="flex flex-col w-full px-3 sm:px-4 gap-3 max-w-2xl mx-auto">
       
       <!-- Ephemeris Calibration Banner -->
-      <section class="flex flex-col gap-space-xs mt-space-xs">
+      <section class="flex flex-col gap-1 mt-1">
         <div class="flex items-center justify-between">
-          <div class="flex items-center gap-space-xs">
-            <span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
-            <span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold">Vedic Chronosphere • कालचक्र</span>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+            <span class="text-[11px] uppercase tracking-widest text-primary font-bold">5-Year Timeline (2026–2031)</span>
           </div>
-          <span class="font-label-sm text-label-sm bg-surface-container-high text-midnight-indigo px-space-xs py-0.5 rounded-full font-semibold">Lahiri 24°11'48"</span>
+          <span class="text-[11px] bg-surface-container-high text-midnight-indigo px-2 py-0.5 rounded-full font-semibold">Lahiri 24°11'48"</span>
         </div>
         <div class="flex flex-col">
-          <h1 class="font-headline-lg text-2xl sm:text-3xl text-midnight-indigo font-bold tracking-tight">
-            5-Year Transit Matrix
+          <h1 class="font-headline-lg text-xl sm:text-2xl text-midnight-indigo font-bold tracking-tight">
+            Pancha-Varsha Gochar Matrix
           </h1>
-          <p class="font-body-sm text-body-sm text-muted-lavender">
-            पञ्चवर्षीय गोचर सारणी • Complete Sidereal Ingress &amp; Vakri Cycle (2024–2029)
+          <p class="text-xs sm:text-sm text-muted-lavender">
+            Complete 5-year planetary ingress schedule, retrograde (Vakri) loops, and major epoch shifts (2026–2031).
           </p>
         </div>
       </section>
 
-      <!-- Year Filter Horizontal Track -->
-      <div class="flex items-center gap-space-xs overflow-x-auto no-scrollbar py-0.5">
-        <button class="year-pill px-4 py-2 rounded-xl font-label-md text-label-md font-bold bg-primary-container text-on-primary shadow-sm whitespace-nowrap transition-all" data-year="all">
-          Macro Cycle 5Y
+      <!-- Year Filter Horizontal Track (2026 to 2031) -->
+      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+        <button class="year-pill px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-primary-container text-on-primary shadow-sm whitespace-nowrap transition-all" data-year="all">
+          5-Year Horizon (2026–2031)
         </button>
-        <button class="year-pill px-4 py-2 rounded-xl font-label-md text-label-md font-medium bg-surface-container-lowest text-midnight-indigo shadow-sm whitespace-nowrap hover:bg-surface-container transition-all" data-year="2024">
-          2024 <span class="opacity-80 font-normal">संवत् २०८१</span>
+        <button class="year-pill px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium bg-surface-container-lowest text-midnight-indigo shadow-sm whitespace-nowrap hover:bg-surface-container transition-all" data-year="2026">
+          2026 <span class="text-xs opacity-75 font-normal">(Current)</span>
         </button>
-        <button class="year-pill px-4 py-2 rounded-xl font-label-md text-label-md font-medium bg-surface-container-lowest text-midnight-indigo shadow-sm whitespace-nowrap hover:bg-surface-container transition-all" data-year="2025">
-          2025 <span class="text-muted-lavender font-normal">संवत् २०८२</span>
-        </button>
-        <button class="year-pill px-4 py-2 rounded-xl font-label-md text-label-md font-medium bg-surface-container-lowest text-midnight-indigo shadow-sm whitespace-nowrap hover:bg-surface-container transition-all" data-year="2026">
-          2026
-        </button>
-        <button class="year-pill px-4 py-2 rounded-xl font-label-md text-label-md font-medium bg-surface-container-lowest text-midnight-indigo shadow-sm whitespace-nowrap hover:bg-surface-container transition-all" data-year="2027">
+        <button class="year-pill px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium bg-surface-container-lowest text-midnight-indigo shadow-sm whitespace-nowrap hover:bg-surface-container transition-all" data-year="2027">
           2027
         </button>
-        <button class="year-pill px-4 py-2 rounded-xl font-label-md text-label-md font-medium bg-surface-container-lowest text-midnight-indigo shadow-sm whitespace-nowrap hover:bg-surface-container transition-all" data-year="2028">
+        <button class="year-pill px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium bg-surface-container-lowest text-midnight-indigo shadow-sm whitespace-nowrap hover:bg-surface-container transition-all" data-year="2028">
           2028
         </button>
-        <button class="year-pill px-4 py-2 rounded-xl font-label-md text-label-md font-medium bg-surface-container-lowest text-midnight-indigo shadow-sm whitespace-nowrap hover:bg-surface-container transition-all" data-year="2029">
+        <button class="year-pill px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium bg-surface-container-lowest text-midnight-indigo shadow-sm whitespace-nowrap hover:bg-surface-container transition-all" data-year="2029">
           2029
+        </button>
+        <button class="year-pill px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium bg-surface-container-lowest text-midnight-indigo shadow-sm whitespace-nowrap hover:bg-surface-container transition-all" data-year="2030">
+          2030
+        </button>
+        <button class="year-pill px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium bg-surface-container-lowest text-midnight-indigo shadow-sm whitespace-nowrap hover:bg-surface-container transition-all" data-year="2031">
+          2031
         </button>
       </div>
 
       <!-- Graha Focus Selector Chips -->
-      <div class="flex items-center gap-space-xs overflow-x-auto no-scrollbar pb-1">
-        <button class="graha-chip active flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-parchment-container text-primary font-label-sm text-label-sm font-bold shadow-sm whitespace-nowrap" data-graha="all">
-          <span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+        <button class="graha-chip active flex items-center gap-1 px-3 py-1.5 rounded-full bg-parchment-container text-primary text-xs font-bold shadow-sm whitespace-nowrap" data-graha="all">
+          <span class="material-symbols-outlined text-[14px]">check_circle</span>
           All 9 Grahas
         </button>
-        <button class="graha-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-lowest text-midnight-indigo font-label-sm text-label-sm font-medium shadow-sm whitespace-nowrap" data-graha="guru">
+        <button class="graha-chip flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-lowest text-midnight-indigo text-xs font-medium shadow-sm whitespace-nowrap" data-graha="guru">
           <span class="w-2 h-2 rounded-full bg-[#EAB308]"></span>
           Guru • बृहस्पति
         </button>
-        <button class="graha-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-lowest text-midnight-indigo font-label-sm text-label-sm font-medium shadow-sm whitespace-nowrap" data-graha="shani">
+        <button class="graha-chip flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-lowest text-midnight-indigo text-xs font-medium shadow-sm whitespace-nowrap" data-graha="shani">
           <span class="w-2 h-2 rounded-full bg-[#3B82F6]"></span>
           Shani • शनि
         </button>
-        <button class="graha-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-lowest text-midnight-indigo font-label-sm text-label-sm font-medium shadow-sm whitespace-nowrap" data-graha="nodes">
+        <button class="graha-chip flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-lowest text-midnight-indigo text-xs font-medium shadow-sm whitespace-nowrap" data-graha="nodes">
           <span class="w-2 h-2 rounded-full bg-[#7C3AED]"></span>
           Rahu-Ketu • राहु-केतु
         </button>
-        <button class="graha-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-lowest text-midnight-indigo font-label-sm text-label-sm font-medium shadow-sm whitespace-nowrap" data-graha="mangal">
+        <button class="graha-chip flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-lowest text-midnight-indigo text-xs font-medium shadow-sm whitespace-nowrap" data-graha="mangal">
           <span class="w-2 h-2 rounded-full bg-retrograde-ruby"></span>
           Mangal / Surya
         </button>
       </div>
 
-      <!-- Search & Utilities Row -->
-      <div class="flex items-center gap-space-xs">
+      <!-- Search & Quick Filters -->
+      <div class="flex items-center gap-2">
         <div class="flex-1 relative flex items-center">
-          <span class="material-symbols-outlined absolute left-3 text-muted-lavender text-[18px]">search</span>
-          <input class="w-full pl-9 pr-3 py-2 rounded-xl bg-surface-container-lowest text-midnight-indigo font-body-sm text-body-sm shadow-sm border border-[rgba(197,152,32,0.15)] placeholder:text-muted-lavender focus:outline-none focus:border-gold-border-focus" id="transitSearch" placeholder="Filter by Graha, Rashi, or Nakshatra..." type="text"/>
+          <span class="material-symbols-outlined absolute left-3 text-muted-lavender text-[17px]">search</span>
+          <input class="w-full pl-9 pr-3 py-2 rounded-xl bg-surface-container-lowest text-midnight-indigo text-xs sm:text-sm shadow-sm border border-[rgba(197,152,32,0.18)] placeholder:text-muted-lavender focus:outline-none focus:border-gold-border-focus" id="transitSearch" placeholder="Filter by Graha, Rashi, or Nakshatra..." type="text"/>
         </div>
-        <button onclick="window.print()" aria-label="Print or Export Ephemeris" class="h-10 px-3 rounded-xl bg-surface-container-lowest text-midnight-indigo shadow-sm border border-black/5 flex items-center gap-1 hover:bg-parchment-container transition-all">
-          <span class="material-symbols-outlined text-[18px] text-primary">print</span>
-          <span class="font-label-sm text-label-sm font-bold hidden sm:inline">Print</span>
+        <button onclick="window.print()" aria-label="Print Timeline" class="h-9 px-3 rounded-xl bg-surface-container-lowest text-midnight-indigo shadow-sm border border-black/5 flex items-center gap-1 hover:bg-parchment-container transition-all">
+          <span class="material-symbols-outlined text-[16px] text-primary">print</span>
+          <span class="text-xs font-bold hidden sm:inline">Print</span>
         </button>
       </div>
 
       <!-- Section Title: Macro Ingress Highlights -->
       <div class="flex items-center justify-between pt-1" id="epochs">
-        <div class="flex items-center gap-1.5">
-          <span class="material-symbols-outlined text-primary-container text-[20px]" style="font-variation-settings: 'FILL' 1;">stars</span>
-          <h2 class="font-headline-sm text-headline-sm text-midnight-indigo font-bold">Pivotal Epochs</h2>
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-primary-container text-[18px]">stars</span>
+          <h2 class="font-headline-sm text-sm sm:text-base text-midnight-indigo font-bold">Pivotal Epochs (2026–2031)</h2>
         </div>
-        <span class="font-label-sm text-label-sm text-muted-lavender uppercase tracking-widest font-semibold">3 Major Gochar Milestones</span>
+        <span class="text-[11px] text-muted-lavender uppercase tracking-widest font-semibold">Major Milestones</span>
       </div>
 
-      <!-- Macro Ingress Highlights Carousel / Cards -->
-      <div class="flex flex-col gap-space-sm">
-        <!-- Card 1: Guru Gochar -->
-        <article class="p-space-md rounded-2xl bg-surface-container-lowest shadow-md flex flex-col gap-space-xs relative overflow-hidden border border-[rgba(197,152,32,0.2)]">
-          <div class="absolute -right-10 -bottom-10 w-32 h-32 rounded-full bg-primary-container/10 blur-xl pointer-events-none"></div>
+      <!-- Pivotal Epoch Highlight Cards -->
+      <div class="flex flex-col gap-2.5">
+        <!-- 2026: Exalted Guru & Leo Shift -->
+        <article class="p-3.5 rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col gap-1.5 relative overflow-hidden border border-[rgba(197,152,32,0.2)]">
           <div class="flex items-start justify-between">
-            <div class="flex items-center gap-space-xs">
-              <div class="w-10 h-10 rounded-xl bg-[#FEF3C7] flex items-center justify-center text-[#B45309] font-bold shadow-sm">
-                <span class="font-headline-sm text-headline-sm">♃</span>
+            <div class="flex items-center gap-2">
+              <div class="w-9 h-9 rounded-xl bg-[#FEF3C7] flex items-center justify-center text-[#B45309] font-bold shadow-sm shrink-0">
+                <span class="font-headline-sm text-base">♃</span>
               </div>
               <div>
-                <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">Devaguru Gochar • गुरु गोचर</span>
-                <h3 class="font-title-md text-title-md text-midnight-indigo font-bold leading-tight">Jupiter Ingress into Taurus (वृषभ)</h3>
+                <span class="text-[10px] uppercase tracking-wider text-primary font-bold">Active Epoch • 2026</span>
+                <h3 class="text-sm font-bold text-midnight-indigo leading-tight">Guru in Exalted Cancer ➔ Leo Ingress</h3>
               </div>
             </div>
-            <span class="px-2.5 py-1 rounded-full bg-exalted-emerald/10 text-exalted-emerald font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-exalted-emerald"></span> Active
+            <span class="px-2 py-0.5 rounded-full bg-exalted-emerald/10 text-exalted-emerald text-[10px] font-bold uppercase tracking-wider">
+              Active
             </span>
           </div>
-          <div class="grid grid-cols-2 gap-space-xs my-space-xs bg-parchment-container/60 p-space-sm rounded-xl">
-            <div class="flex flex-col">
-              <span class="font-label-sm text-label-sm text-muted-lavender">Ingress Exact</span>
-              <span class="font-body-md text-body-md text-midnight-indigo font-semibold">May 1, 2024 • 12:48 IST</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="font-label-sm text-label-sm text-muted-lavender">Nakshatra Arc</span>
-              <span class="font-body-md text-body-md text-midnight-indigo font-semibold">Krittika P2 ➔ Rohini</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="font-label-sm text-label-sm text-muted-lavender">Transit Span</span>
-              <span class="font-body-md text-body-md text-midnight-indigo font-semibold">378 Days (Sidereal)</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="font-label-sm text-label-sm text-muted-lavender">Next Rashi Ingress</span>
-              <span class="font-body-md text-body-md text-midnight-indigo font-semibold">Gemini • May 14, 2025</span>
-            </div>
+          <div class="grid grid-cols-2 gap-1.5 bg-parchment-container/60 p-2.5 rounded-xl text-xs">
+            <div><span class="text-muted-lavender">Next Ingress:</span> <b class="text-midnight-indigo">Oct 31, 2026 (Leo)</b></div>
+            <div><span class="text-muted-lavender">Retrograde Return:</span> <b class="text-midnight-indigo">Jan 25, 2027 (Cancer ⭐)</b></div>
           </div>
-          <div class="flex items-center justify-between text-body-sm text-midnight-indigo/80 pt-1">
-            <p class="font-body-sm text-body-sm">
-              Expands Artha (material prosperity), banking stability, &amp; cultural dharma. Highly auspicious for Taurus, Virgo &amp; Capricorn moons.
-            </p>
-          </div>
-        </article>
-
-        <!-- Card 2: Shani Gochar -->
-        <article class="p-space-md rounded-2xl bg-surface-container-lowest shadow-md flex flex-col gap-space-xs relative overflow-hidden border border-[rgba(197,152,32,0.2)]">
-          <div class="absolute -right-10 -bottom-10 w-32 h-32 rounded-full bg-[#1E3A8A]/10 blur-xl pointer-events-none"></div>
-          <div class="flex items-start justify-between">
-            <div class="flex items-center gap-space-xs">
-              <div class="w-10 h-10 rounded-xl bg-[#DBEAFE] flex items-center justify-center text-[#1E40AF] font-bold shadow-sm">
-                <span class="font-headline-sm text-headline-sm">♄</span>
-              </div>
-              <div>
-                <span class="font-label-sm text-label-sm uppercase tracking-wider text-[#1E40AF] font-bold">Karmakaraka Gochar • शनि गोचर</span>
-                <h3 class="font-title-md text-title-md text-midnight-indigo font-bold leading-tight">Saturn Ingress into Pisces (मीन ⭐)</h3>
-              </div>
-            </div>
-            <span class="px-2.5 py-1 rounded-full bg-primary-container/15 text-primary font-label-sm text-label-sm font-bold uppercase tracking-wider">
-              March 2025
-            </span>
-          </div>
-          <div class="grid grid-cols-2 gap-space-xs my-space-xs bg-parchment-container/60 p-space-sm rounded-xl">
-            <div class="flex flex-col">
-              <span class="font-label-sm text-label-sm text-muted-lavender">Ingress Exact</span>
-              <span class="font-body-md text-body-md text-midnight-indigo font-semibold">Mar 29, 2025 • 22:04 IST</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="font-label-sm text-label-sm text-muted-lavender">Moolatrikona Exit</span>
-              <span class="font-body-md text-body-md text-midnight-indigo font-semibold">29°59' Kumbha</span>
-            </div>
-            <div class="flex flex-col col-span-2">
-              <span class="font-label-sm text-label-sm text-muted-lavender">Sade Sati Re-Alignment</span>
-              <div class="flex items-center gap-2 mt-1 flex-wrap">
-                <span class="px-2 py-0.5 rounded bg-surface-container-high text-midnight-indigo font-label-sm text-label-sm font-semibold">Cap: Ends 🏁</span>
-                <span class="px-2 py-0.5 rounded bg-surface-container-high text-midnight-indigo font-label-sm text-label-sm font-semibold">Aqu: Phase 3</span>
-                <span class="px-2 py-0.5 rounded bg-surface-container-high text-midnight-indigo font-label-sm text-label-sm font-semibold">Pis: Phase 2</span>
-                <span class="px-2 py-0.5 rounded bg-retrograde-ruby/10 text-retrograde-ruby font-label-sm text-label-sm font-bold">Ari: Begins ⚡</span>
-              </div>
-            </div>
-          </div>
-          <p class="font-body-sm text-body-sm text-midnight-indigo/80">
-            Saturn departs his airy laboratory of Aquarius into the mystical watery realm of Jupiter's Pisces. Dissolution of karmic debts, spiritual isolation, and sea-change in global finance.
+          <p class="text-xs text-midnight-indigo/80">
+            Jupiter graces Cancer with peak exaltation blessings followed by royal expansion into Leo. Highly auspicious for domestic harmony, investments, and higher learning.
           </p>
         </article>
 
-        <!-- Card 3: Rahu-Ketu Shift -->
-        <article class="p-space-md rounded-2xl bg-surface-container-lowest shadow-md flex flex-col gap-space-xs relative overflow-hidden border border-[rgba(197,152,32,0.2)]">
-          <div class="absolute -right-10 -bottom-10 w-32 h-32 rounded-full bg-[#7C3AED]/10 blur-xl pointer-events-none"></div>
+        <!-- 2028: Saturn in Aries -->
+        <article class="p-3.5 rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col gap-1.5 relative overflow-hidden border border-[rgba(197,152,32,0.2)]">
           <div class="flex items-start justify-between">
-            <div class="flex items-center gap-space-xs">
-              <div class="w-10 h-10 rounded-xl bg-[#EDE9FE] flex items-center justify-center text-[#6D28D9] font-bold shadow-sm">
-                <span class="font-headline-sm text-headline-sm">☊☋</span>
+            <div class="flex items-center gap-2">
+              <div class="w-9 h-9 rounded-xl bg-[#DBEAFE] flex items-center justify-center text-[#1E40AF] font-bold shadow-sm shrink-0">
+                <span class="font-headline-sm text-base">♄</span>
               </div>
               <div>
-                <span class="font-label-sm text-label-sm uppercase tracking-wider text-[#6D28D9] font-bold">Nodal Axis • राहु-केतु राशि परिवर्तन</span>
-                <h3 class="font-title-md text-title-md text-midnight-indigo font-bold leading-tight">Aquarius–Leo Axis Shift (कुम्भ-सिंह)</h3>
+                <span class="text-[10px] uppercase tracking-wider text-[#1E40AF] font-bold">Historic Shift • 2028</span>
+                <h3 class="text-sm font-bold text-midnight-indigo leading-tight">Saturn Ingress to Aries (शनि मेष प्रवेश)</h3>
               </div>
             </div>
-            <span class="px-2.5 py-1 rounded-full bg-surface-container text-muted-lavender font-label-sm text-label-sm font-bold uppercase tracking-wider">
-              May 2025
+            <span class="px-2 py-0.5 rounded-full bg-retrograde-ruby/15 text-retrograde-ruby text-[10px] font-bold uppercase tracking-wider">
+              Feb 2028
             </span>
           </div>
-          <div class="grid grid-cols-2 gap-space-xs my-space-xs bg-parchment-container/60 p-space-sm rounded-xl">
-            <div class="flex flex-col">
-              <span class="font-label-sm text-label-sm text-muted-lavender">Mean Ingress</span>
-              <span class="font-body-md text-body-md text-midnight-indigo font-semibold">May 18, 2025 • 16:30 IST</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="font-label-sm text-label-sm text-muted-lavender">True Node Ingress</span>
-              <span class="font-body-md text-body-md text-midnight-indigo font-semibold">May 29, 2025</span>
-            </div>
-            <div class="flex flex-col col-span-2">
-              <span class="font-label-sm text-label-sm text-muted-lavender">Orientation</span>
-              <span class="font-body-md text-body-md text-midnight-indigo font-semibold">Rahu ➔ Aquarius | Ketu ➔ Leo</span>
-            </div>
+          <div class="grid grid-cols-2 gap-1.5 bg-parchment-container/60 p-2.5 rounded-xl text-xs">
+            <div><span class="text-muted-lavender">Ingress Exact:</span> <b class="text-midnight-indigo">Feb 23, 2028</b></div>
+            <div><span class="text-muted-lavender">Sade Sati:</span> <b class="text-midnight-indigo">Aries Peak • Taurus Begins</b></div>
           </div>
-          <p class="font-body-sm text-body-sm text-midnight-indigo/80">
-            18-month cycle moving humanity from collective emotional sacrifice (Pisces-Virgo) to decentralization, artificial intelligence mastery, and sovereign authority tests.
+          <p class="text-xs text-midnight-indigo/80">
+            Saturn enters fiery Aries, demanding physical discipline, endurance, and ethical labor standards across institutions worldwide.
+          </p>
+        </article>
+
+        <!-- 2030: Saturn in Taurus & Guru in Sagittarius -->
+        <article class="p-3.5 rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col gap-1.5 relative overflow-hidden border border-[rgba(197,152,32,0.2)]">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-9 h-9 rounded-xl bg-[#EDE9FE] flex items-center justify-center text-[#6D28D9] font-bold shadow-sm shrink-0">
+                <span class="font-headline-sm text-base">⭐</span>
+              </div>
+              <div>
+                <span class="text-[10px] uppercase tracking-wider text-[#6D28D9] font-bold">Golden Confluence • 2030</span>
+                <h3 class="text-sm font-bold text-midnight-indigo leading-tight">Saturn in Taurus & Guru in Sagittarius</h3>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary text-[10px] font-bold uppercase tracking-wider">
+              2030 Golden
+            </span>
+          </div>
+          <p class="text-xs text-midnight-indigo/80">
+            Double Vedic blessing: Shani enters friendly Taurus restoring financial stability, while Jupiter enters his own Moolatrikona sign Sagittarius creating global Dharmic prosperity.
           </p>
         </article>
       </div>
-
-      <!-- Astronomical Calibration Card & Ayanamsa Details -->
-      <section class="p-space-sm rounded-xl bg-parchment-container shadow-sm flex items-center gap-space-sm border border-[rgba(197,152,32,0.15)]">
-        <div class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary flex-shrink-0 shadow-sm">
-          <span class="material-symbols-outlined text-[20px]">tune</span>
-        </div>
-        <div class="flex flex-col">
-          <span class="font-label-sm text-label-sm font-bold text-midnight-indigo uppercase tracking-wider">Ayanamsa &amp; Ephemeris Precision Engine</span>
-          <p class="font-body-sm text-body-sm text-muted-lavender">
-            Calculated with True Chitra Paksha (Lahiri) Ayanamsa 24°11'48.36" • Swiss Ephemeris DE431 Standard. All timestamps synced to Indian Standard Time (IST, UTC+5:30). Tap any row below for in-depth Vedic guidance.
-          </p>
-        </div>
-      </section>
 
       <!-- Section Title: Master Timeline & Ingress Matrix -->
       <div class="flex items-center justify-between pt-1">
-        <div class="flex items-center gap-1.5">
-          <span class="material-symbols-outlined text-primary-container text-[20px]">calendar_view_month</span>
-          <h2 class="font-headline-sm text-headline-sm text-midnight-indigo font-bold">Transit Chronology</h2>
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-primary-container text-[18px]">calendar_view_month</span>
+          <h2 class="font-headline-sm text-sm sm:text-base text-midnight-indigo font-bold">Transit Chronology (Tap for Insights)</h2>
         </div>
-        <span class="font-label-sm text-label-sm text-primary font-bold">2024 – 2031 Matrix</span>
+        <span class="text-[11px] text-primary font-bold">2026–2031 Matrix</span>
       </div>
 
       <!-- Detailed Dynamic Timeline Cards Container -->
-      <div class="flex flex-col gap-space-sm" id="timelineList">
-        <div class="p-6 text-center text-muted-lavender bg-white rounded-xl shadow-sm">Loading 5-Year Vedic Ephemeris...</div>
+      <div class="flex flex-col gap-2" id="timelineList">
+        <div class="p-6 text-center text-muted-lavender bg-white rounded-xl shadow-sm text-xs">Loading 5-Year Vedic Ephemeris...</div>
       </div>
 
-      <!-- Classical Shloka / Vedic Delight Footer Card -->
-      <footer class="p-space-md rounded-2xl bg-gradient-to-br from-parchment-container to-surface-container-lowest shadow-sm flex flex-col gap-space-xs my-space-xs border border-[rgba(197,152,32,0.2)]">
-        <div class="flex items-center gap-2 text-primary">
-          <span class="material-symbols-outlined text-[20px]">auto_stories</span>
-          <span class="font-label-sm text-label-sm uppercase tracking-widest font-bold">Brihat Parashara Hora Shastra</span>
+      <!-- Classical Shloka Card -->
+      <footer class="p-4 rounded-2xl bg-gradient-to-br from-parchment-container to-surface-container-lowest shadow-sm flex flex-col gap-1 my-1 border border-[rgba(197,152,32,0.2)]">
+        <div class="flex items-center gap-1.5 text-primary">
+          <span class="material-symbols-outlined text-[18px]">auto_stories</span>
+          <span class="text-[11px] uppercase tracking-widest font-bold">Brihat Parashara Hora Shastra</span>
         </div>
-        <blockquote class="font-headline-sm text-headline-sm text-midnight-indigo italic">
-          "ग्रहाधीनं जगत्सर्वं ग्रहाधीनाः नराधिपाः।<br/>
-          कालश्च ग्रहाधीनश्च तस्माद् ग्रहबलाबलम्॥"
+        <blockquote class="font-headline-sm text-sm text-midnight-indigo italic">
+          "ग्रहाधीनं जगत्सर्वं ग्रहाधीनाः नराधिपाः। कालश्च ग्रहाधीनश्च तस्माद् ग्रहबलाबलम्॥"
         </blockquote>
-        <p class="font-body-sm text-body-sm text-muted-lavender">
-          "The entire cosmos, emperors, and time itself are governed by the planetary spheres. Understanding their ingress grants mastery over destiny."
+        <p class="text-xs text-muted-lavender">
+          The entire cosmos and time itself are governed by the planetary spheres.
         </p>
       </footer>
 
     </div>
   </main>
 
-  <!-- Bottom Nav -->
-  <nav class="fixed bottom-0 w-full z-50 pb-safe bg-[#ffffff]/90 backdrop-blur-xl border-t border-[rgba(197,152,32,0.25)] shadow-[0_-4px_24px_rgba(35,35,62,0.08)]" data-graha-nav="custom">
-    <div class="flex items-center justify-around h-16 max-w-md mx-auto px-space-xs">
-      <a class="flex flex-col items-center justify-center w-16 h-12 rounded-xl text-muted-lavender hover:text-midnight-indigo transition-all gap-0.5" href="index.html">
-        <span class="material-symbols-outlined text-[22px]">diamond</span>
-        <span class="font-label-sm text-label-sm font-semibold">Kundali</span>
+  <!-- Mobile Bottom Floating Navigation -->
+  <nav class="fixed bottom-0 w-full z-50 pb-safe px-3 pb-3 pointer-events-none" data-graha-nav="custom">
+    <div class="mx-auto max-w-sm h-14 rounded-full bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_8px_24px_rgba(35,35,62,0.12)] border border-[rgba(197,152,32,0.25)] px-2 flex items-center justify-around pointer-events-auto">
+      <a class="flex flex-col items-center justify-center h-11 w-16 rounded-full text-muted-lavender hover:text-midnight-indigo transition-all gap-0.5" href="index.html">
+        <span class="material-symbols-outlined text-[20px]">diamond</span>
+        <span class="text-[10px] font-semibold leading-none">Kundali</span>
       </a>
-      <a class="flex flex-col items-center justify-center w-16 h-12 rounded-xl text-primary bg-primary-fixed/35 font-semibold transition-all gap-0.5" href="transit-calendar.html">
-        <span class="material-symbols-outlined text-[22px]">calendar_month</span>
-        <span class="font-label-sm text-label-sm font-semibold">5-Yr Matrix</span>
+      <a class="flex flex-col items-center justify-center h-11 w-20 rounded-full text-primary bg-primary-fixed/35 font-semibold transition-all gap-0.5" href="transit-calendar.html">
+        <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+        <span class="text-[10px] font-semibold leading-none">5-Yr Matrix</span>
       </a>
-      <a class="flex flex-col items-center justify-center w-16 h-12 rounded-xl text-muted-lavender hover:text-midnight-indigo transition-all gap-0.5" href="transit-calendar.html?filter=retrograde">
-        <span class="material-symbols-outlined text-[22px]">warning</span>
-        <span class="font-label-sm text-label-sm font-semibold">Retrograde</span>
+      <a class="flex flex-col items-center justify-center h-11 w-16 rounded-full text-muted-lavender hover:text-midnight-indigo transition-all gap-0.5" href="transit-calendar.html?filter=retrograde">
+        <span class="material-symbols-outlined text-[20px]">warning</span>
+        <span class="text-[10px] font-semibold leading-none">Vakri</span>
       </a>
-      <a class="flex flex-col items-center justify-center w-16 h-12 rounded-xl text-muted-lavender hover:text-midnight-indigo transition-all gap-0.5" href="index.html#navagraha">
-        <span class="material-symbols-outlined text-[22px]">grid_view</span>
-        <span class="font-label-sm text-label-sm font-semibold">Grahas</span>
+      <a class="flex flex-col items-center justify-center h-11 w-16 rounded-full text-muted-lavender hover:text-midnight-indigo transition-all gap-0.5" href="index.html#navagraha">
+        <span class="material-symbols-outlined text-[20px]">grid_view</span>
+        <span class="text-[10px] font-semibold leading-none">Grahas</span>
       </a>
     </div>
   </nav>

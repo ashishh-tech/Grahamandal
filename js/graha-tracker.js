@@ -397,32 +397,32 @@
             else if (d.status === 'Exalted') barColor = 'bg-exalted-emerald';
 
             html += `
-                <div class="flex flex-col bg-surface-container-lowest rounded-xl p-space-sm shadow-[0_2px_12px_rgba(197,152,32,0.05)] space-y-2 border border-black/5 hover:border-gold-border-focus transition-all">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <span class="w-8 h-8 rounded-full bg-primary-container/15 text-primary flex items-center justify-center text-[16px] shadow-sm">${meta.emoji}</span>
-                            <div class="flex flex-col">
-                                <span class="font-headline-sm text-headline-sm font-bold text-cosmic-slate leading-none">${titleDisplay}</span>
-                                <span class="font-label-sm text-label-sm text-muted-lavender">${roleDisplay}</span>
+                <div class="flex flex-col bg-surface-container-lowest rounded-xl p-3 sm:p-4 shadow-[0_2px_12px_rgba(197,152,32,0.05)] space-y-2 border border-black/5 hover:border-gold-border-focus transition-all">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="w-8 h-8 rounded-full bg-primary-container/15 text-primary flex items-center justify-center text-[16px] shrink-0 shadow-sm">${meta.emoji}</span>
+                            <div class="flex flex-col min-w-0">
+                                <span class="font-headline-sm text-sm sm:text-base font-bold text-cosmic-slate leading-tight truncate">${titleDisplay}</span>
+                                <span class="text-xs text-muted-lavender truncate">${roleDisplay}</span>
                             </div>
                         </div>
-                        <div class="flex items-center gap-1.5 flex-wrap justify-end">
+                        <div class="flex items-center gap-1 flex-wrap justify-end shrink-0">
                             ${dignityBadge}
                             ${motionBadge}
                         </div>
                     </div>
 
-                    <div class="flex items-baseline justify-between pt-1">
+                    <div class="flex items-baseline justify-between pt-0.5 flex-wrap gap-1">
                         <div>
-                            <span class="font-headline-md text-headline-md font-bold text-cosmic-slate">${dms}</span>
-                            <span class="font-body-md text-body-md text-muted-lavender ml-1">in ${rashiDisplay}</span>
+                            <span class="text-sm sm:text-base font-bold text-cosmic-slate font-headline-md">${dms}</span>
+                            <span class="text-xs sm:text-sm text-muted-lavender ml-1">in ${rashiDisplay}</span>
                         </div>
-                        <span class="font-label-sm text-label-sm text-cosmic-slate font-medium bg-surface-container-low px-2 py-0.5 rounded-full">${houseName}</span>
+                        <span class="text-[11px] text-cosmic-slate font-medium bg-surface-container-low px-2 py-0.5 rounded-full">${houseName}</span>
                     </div>
 
                     <div class="flex flex-col space-y-1">
-                        <div class="flex justify-between font-label-sm text-label-sm text-muted-lavender">
-                            <span>Nakshatra: <strong class="text-cosmic-slate font-medium">${nakHin} (${nak.name})</strong> - Pada ${nak.pada}</span>
+                        <div class="flex justify-between items-center text-[11px] text-muted-lavender flex-wrap gap-1">
+                            <span>Nakshatra: <strong class="text-cosmic-slate font-medium">${nakHin} (${nak.name})</strong> • Pada ${nak.pada}</span>
                             <span>${pct}% through sign</span>
                         </div>
                         <div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
@@ -506,6 +506,13 @@
             }
         }, 1000);
 
+        function getLocalDateString(d) {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
         // Reset to Today button
         const resetBtn = document.getElementById('reset-today-btn');
         if (resetBtn) {
@@ -514,7 +521,7 @@
                 state.currentDate = new Date();
                 const dateInput = document.getElementById('chart-date-input');
                 if (dateInput) {
-                    dateInput.value = state.currentDate.toISOString().split('T')[0];
+                    dateInput.value = getLocalDateString(state.currentDate);
                 }
                 updateDashboard();
             });
@@ -523,7 +530,7 @@
         // Date input picker
         const dateInput = document.getElementById('chart-date-input');
         if (dateInput) {
-            dateInput.value = state.currentDate.toISOString().split('T')[0];
+            dateInput.value = getLocalDateString(state.currentDate);
             dateInput.addEventListener('change', (e) => {
                 if (e.target.value) {
                     state.isLive = false;

@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="70%" stop-color="#FAF7F2"/>
+      <stop offset="100%" stop-color="#F2ECE1"/>
+    </radialGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E5B942"/>
+      <stop offset="40%" stop-color="#C59820"/>
+      <stop offset="75%" stop-color="#9C7410"/>
+      <stop offset="100%" stop-color="#DFB339"/>
+    </linearGradient>
+    <linearGradient id="deepGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C59820"/>
+      <stop offset="100%" stop-color="#7A5807"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FDE68A" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#F59E0B" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#C59820" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Outer Frame -->
+  <circle cx="256" cy="256" r="236" fill="url(#bgGrad)" stroke="#E5D9C5" stroke-width="2"/>
+  <circle cx="256" cy="256" r="226" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-opacity="0.6" stroke-dasharray="2 4"/>
+
+  <!-- 12 Sidereal Zodiac Rays / Ticks -->
+  <g stroke="url(#goldGrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.75">
+    <line x1="256" y1="36" x2="256" y2="48"/>
+    <line x1="256" y1="464" x2="256" y2="476"/>
+    <line x1="36" y1="256" x2="48" y2="256"/>
+    <line x1="464" y1="256" x2="476" y2="256"/>
+    <line x1="146" y1="65" x2="152" y2="76"/>
+    <line x1="366" y1="65" x2="360" y2="76"/>
+    <line x1="146" y1="447" x2="152" y2="436"/>
+    <line x1="366" y1="447" x2="360" y2="436"/>
+    <line x1="65" y1="146" x2="76" y2="152"/>
+    <line x1="447" y1="146" x2="436" y2="152"/>
+    <line x1="65" y1="366" x2="76" y2="360"/>
+    <line x1="447" y1="366" x2="436" y2="360"/>
+  </g>
+
+  <!-- Sidereal Kundali Geometry -->
+  <polygon points="256,76 436,256 256,436 76,256" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-opacity="0.45"/>
+  <rect x="128" y="128" width="256" height="256" fill="none" stroke="url(#goldGrad)" stroke-width="1" stroke-opacity="0.25"/>
+
+  <!-- Planetary Orbits & Nodes -->
+  <ellipse cx="256" cy="256" rx="195" ry="85" fill="none" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round" transform="rotate(-28 256 256)"/>
+  <ellipse cx="256" cy="256" rx="195" ry="85" fill="none" stroke="url(#goldGrad)" stroke-width="1" stroke-dasharray="4 8" stroke-opacity="0.6" transform="rotate(38 256 256)"/>
+  
+  <!-- Sun, Chandra, Shani, Mangal Nodes -->
+  <g transform="translate(422, 168)">
+    <circle cx="0" cy="0" r="14" fill="#F59E0B"/>
+    <circle cx="0" cy="0" r="14" fill="url(#goldGrad)"/>
+    <circle cx="0" cy="0" r="18" fill="none" stroke="#F59E0B" stroke-width="1.5" stroke-opacity="0.5"/>
+    <circle cx="-3" cy="-3" r="3" fill="#FFF7ED" opacity="0.8"/>
+  </g>
+  <g transform="translate(86, 326)">
+    <circle cx="0" cy="0" r="9" fill="#0D9488"/>
+    <circle cx="0" cy="0" r="12" fill="none" stroke="#0D9488" stroke-width="1" stroke-opacity="0.4"/>
+    <circle cx="-2" cy="-2" r="2" fill="#CCFBF1"/>
+  </g>
+  <g transform="translate(378, 372)">
+    <circle cx="0" cy="0" r="7.5" fill="#3B82F6"/>
+    <circle cx="0" cy="0" r="11" fill="none" stroke="#3B82F6" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g transform="translate(132, 142)">
+    <circle cx="0" cy="0" r="6.5" fill="#E11D48"/>
+  </g>
+
+  <!-- Core Solar Medallion -->
+  <circle cx="256" cy="256" r="120" fill="url(#sunGlow)"/>
+  <circle cx="256" cy="256" r="98" fill="#FFFFFF" stroke="url(#goldGrad)" stroke-width="3.5"/>
+  <circle cx="256" cy="256" r="90" fill="#FAF6EE" stroke="#E5D9C5" stroke-width="1"/>
+
+  <!-- Subtle 8-Point Starburst -->
+  <g fill="none" stroke="url(#goldGrad)" stroke-width="1" opacity="0.35">
+    <path d="M256,174 L256,338 M174,256 L338,256"/>
+    <path d="M198,198 L314,314 M314,198 L198,314"/>
+  </g>
+
+  <!-- Central Sanskrit Devanagari Glyph 'ग्रह' -->
+  <g id="graha-glyph">
+    <!-- Shirorekha -->
+    <rect x="202" y="210" width="108" height="9.5" rx="3" fill="url(#deepGoldGrad)"/>
+    <!-- 'ग' -->
+    <path d="M 218,220 L 218,252 C 218,261 210,265 204,261 C 198,257 202,249 208,249 L 214,249" fill="none" stroke="url(#deepGoldGrad)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="234" y1="218" x2="234" y2="278" stroke="url(#deepGoldGrad)" stroke-width="9" stroke-linecap="round"/>
+    <line x1="234" y1="254" x2="216" y2="274" stroke="url(#deepGoldGrad)" stroke-width="8" stroke-linecap="round"/>
+    <!-- 'ह' -->
+    <path d="M 276,218 L 276,234 C 276,242 264,244 263,253 C 262,260 270,264 278,263" fill="none" stroke="url(#deepGoldGrad)" stroke-width="8.5" stroke-linecap="round"/>
+    <path d="M 268,253 C 262,260 262,272 272,277 C 279,280 286,276 288,272" fill="none" stroke="url(#deepGoldGrad)" stroke-width="8.5" stroke-linecap="round"/>
+  </g>
+
+  <circle cx="256" cy="184" r="3" fill="url(#goldGrad)"/>
+  <circle cx="256" cy="328" r="3" fill="url(#goldGrad)"/>
+  <circle cx="184" cy="256" r="3" fill="url(#goldGrad)"/>
+  <circle cx="328" cy="256" r="3" fill="url(#goldGrad)"/>
+</svg>

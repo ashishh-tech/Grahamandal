@@ -1,25 +1,56 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
   <defs>
-    <radialGradient id="goldGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#FFF2B2" stop-opacity="0.3"/>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="70%" stop-color="#FAF7F2"/>
+      <stop offset="100%" stop-color="#F2ECE1"/>
+    </radialGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E5B942"/>
+      <stop offset="40%" stop-color="#C59820"/>
+      <stop offset="75%" stop-color="#9C7410"/>
+      <stop offset="100%" stop-color="#DFB339"/>
+    </linearGradient>
+    <linearGradient id="deepGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C59820"/>
+      <stop offset="100%" stop-color="#7A5807"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FDE68A" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#F59E0B" stop-opacity="0.2"/>
       <stop offset="100%" stop-color="#C59820" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#F1C047"/>
-      <stop offset="50%" stop-color="#C59820"/>
-      <stop offset="100%" stop-color="#785A00"/>
-    </linearGradient>
   </defs>
-  <!-- Background circle -->
-  <circle cx="32" cy="32" r="30" fill="#FAF8F5"/>
-  <circle cx="32" cy="32" r="28" fill="url(#goldGlow)"/>
-  <!-- Planetary Orbit Ring -->
-  <ellipse cx="32" cy="32" rx="27" ry="11" fill="none" stroke="url(#ringGrad)" stroke-width="1.8" transform="rotate(-25 32 32)"/>
-  <!-- Planet dot on orbit -->
-  <circle cx="53" cy="22" r="2.5" fill="#0D9488"/>
-  <!-- Inner seal border -->
-  <circle cx="32" cy="32" r="22" fill="#C59820" stroke="#785A00" stroke-width="1"/>
-  <circle cx="32" cy="32" r="20" fill="none" stroke="#FAF8F5" stroke-opacity="0.4" stroke-width="0.8"/>
-  <!-- Sanskrit Character 'ग्रह' -->
-  <text x="32" y="38" font-family="'Noto Serif', 'Noto Sans Devanagari', serif" font-size="18" font-weight="700" text-anchor="middle" fill="#FFFFFF">ग्रह</text>
+
+  <circle cx="256" cy="256" r="236" fill="url(#bgGrad)" stroke="#E5D9C5" stroke-width="2"/>
+  <circle cx="256" cy="256" r="226" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-dasharray="2 4"/>
+
+  <!-- Sidereal Kundali Geometry -->
+  <polygon points="256,76 436,256 256,436 76,256" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-opacity="0.45"/>
+  <rect x="128" y="128" width="256" height="256" fill="none" stroke="url(#goldGrad)" stroke-width="1" stroke-opacity="0.25"/>
+
+  <!-- Planetary Orbits & Nodes -->
+  <ellipse cx="256" cy="256" rx="195" ry="85" fill="none" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round" transform="rotate(-28 256 256)"/>
+  <ellipse cx="256" cy="256" rx="195" ry="85" fill="none" stroke="url(#goldGrad)" stroke-width="1" stroke-dasharray="4 8" stroke-opacity="0.6" transform="rotate(38 256 256)"/>
+  
+  <!-- Nodes -->
+  <circle cx="422" cy="168" r="14" fill="url(#goldGrad)"/>
+  <circle cx="86" cy="326" r="9" fill="#0D9488"/>
+  <circle cx="378" cy="372" r="7.5" fill="#3B82F6"/>
+  <circle cx="132" cy="142" r="6.5" fill="#E11D48"/>
+
+  <!-- Core Solar Medallion -->
+  <circle cx="256" cy="256" r="120" fill="url(#sunGlow)"/>
+  <circle cx="256" cy="256" r="98" fill="#FFFFFF" stroke="url(#goldGrad)" stroke-width="3.5"/>
+  <circle cx="256" cy="256" r="90" fill="#FAF6EE" stroke="#E5D9C5" stroke-width="1"/>
+
+  <!-- Sanskrit Glyph 'ग्रह' -->
+  <g id="graha-glyph">
+    <rect x="202" y="210" width="108" height="9.5" rx="3" fill="url(#deepGoldGrad)"/>
+    <path d="M 218,220 L 218,252 C 218,261 210,265 204,261 C 198,257 202,249 208,249 L 214,249" fill="none" stroke="url(#deepGoldGrad)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="234" y1="218" x2="234" y2="278" stroke="url(#deepGoldGrad)" stroke-width="9" stroke-linecap="round"/>
+    <line x1="234" y1="254" x2="216" y2="274" stroke="url(#deepGoldGrad)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M 276,218 L 276,234 C 276,242 264,244 263,253 C 262,260 270,264 278,263" fill="none" stroke="url(#deepGoldGrad)" stroke-width="8.5" stroke-linecap="round"/>
+    <path d="M 268,253 C 262,260 262,272 272,277 C 279,280 286,276 288,272" fill="none" stroke="url(#deepGoldGrad)" stroke-width="8.5" stroke-linecap="round"/>
+  </g>
 </svg>

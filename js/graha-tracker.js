@@ -134,150 +134,151 @@
         };
     }
 
-    // Render Dynamic SVG North Indian Kundali
+    // Render Dynamic SVG North Indian Kundali with AstroPsycho Symmetry & Layout
     function renderNorthIndianSVG(ascendant, planetaryDetails) {
-        const ascSign = Math.floor(ascendant / 30) + 1; // 1-indexed
+        const size = 600;
+        const padding = 24;
+        const chartSize = size - (padding * 2); // 552
+        const ascendantSign = Math.floor(ascendant / 30) + 1; // 1-indexed
 
-        // Precompute planets per house (1 to 12)
-        const housePlanets = Array.from({ length: 13 }, () => []);
-        for (const [p, d] of Object.entries(planetaryDetails)) {
-            if (d.house >= 1 && d.house <= 12) {
-                housePlanets[d.house].push({ planet: p, details: d });
-            }
-        }
+        // AstroPsycho handpicked outer tip/corner positions with perfect 12-fold symmetry
+        const rashiPos = [
+            { x: 300, y: 52 },   // H1  — top tip of upper diamond
+            { x: 145, y: 52 },   // H2  — top-left corner
+            { x: 52, y: 145 },   // H3  — left-top corner
+            { x: 112, y: 300 },  // H4  — left tip of left diamond
+            { x: 52, y: 455 },   // H5  — left-bottom corner
+            { x: 145, y: 548 },  // H6  — bottom-left corner
+            { x: 300, y: 550 },  // H7  — bottom tip of lower diamond
+            { x: 455, y: 548 },  // H8  — bottom-right corner
+            { x: 548, y: 455 },  // H9  — right-bottom corner
+            { x: 488, y: 300 },  // H10 — right tip of right diamond
+            { x: 548, y: 145 },  // H11 — right-top corner
+            { x: 455, y: 52 }    // H12 — top-right corner
+        ];
 
-        const getSignForHouse = (h) => ((ascSign + h - 2) % 12) + 1;
-
-        // Visual coordinate anchors for house center and numbers
-        const rashiPositions = {
-            1: { x: 200, y: 172 },
-            2: { x: 160, y: 30 },
-            3: { x: 32, y: 172 },
-            4: { x: 168, y: 200 },
-            5: { x: 32, y: 228 },
-            6: { x: 160, y: 370 },
-            7: { x: 200, y: 232 },
-            8: { x: 240, y: 370 },
-            9: { x: 368, y: 228 },
-            10: { x: 232, y: 200 },
-            11: { x: 368, y: 172 },
-            12: { x: 240, y: 30 }
-        };
-
-        const houseZones = {
-            1: { x: 200, y: 112 },
-            2: { x: 92, y: 52 },
-            3: { x: 56, y: 106 },
-            4: { x: 92, y: 200 },
-            5: { x: 56, y: 294 },
-            6: { x: 92, y: 348 },
-            7: { x: 200, y: 310 },
-            8: { x: 308, y: 348 },
-            9: { x: 344, y: 294 },
-            10: { x: 308, y: 200 },
-            11: { x: 344, y: 106 },
-            12: { x: 308, y: 52 }
-        };
+        // Planet render zones — centroid of each house where planets are vertically centered
+        const zones = [
+            { x: size / 2, y: size * 0.33 },          // H1 (300, 198)
+            { x: size * 0.25, y: size * 0.15 },       // H2 (150, 90)
+            { x: size * 0.15, y: size * 0.25 },       // H3 (90, 150)
+            { x: size * 0.33, y: size / 2 },           // H4 (198, 300)
+            { x: size * 0.15, y: size * 0.75 },       // H5 (90, 450)
+            { x: size * 0.25, y: size * 0.85 },       // H6 (150, 510)
+            { x: size / 2, y: size * 0.67 },           // H7 (300, 402)
+            { x: size * 0.75, y: size * 0.85 },       // H8 (450, 510)
+            { x: size * 0.85, y: size * 0.75 },       // H9 (510, 450)
+            { x: size * 0.67, y: size / 2 },           // H10 (402, 300)
+            { x: size * 0.85, y: size * 0.25 },       // H11 (510, 150)
+            { x: size * 0.75, y: size * 0.15 }        // H12 (450, 90)
+        ];
 
         const shortCodes = {
             sun: 'Su', moon: 'Mo', mars: 'Ma', mercury: 'Me',
             jupiter: 'Ju', venus: 'Ve', saturn: 'Sa', rahu: 'Ra', ketu: 'Ke'
         };
 
-        let planetsMarkup = '';
-
-        // Add Lagna marker in House 1
         const ascDegInSign = ascendant % 30;
-        const ascDMS = `${Math.floor(ascDegInSign)}°${Math.floor((ascDegInSign % 1) * 60)}'`;
-        planetsMarkup += `
-            <g transform="translate(168, 68)">
-                <rect width="64" height="18" rx="9" fill="#FFFFFF" fill-opacity="0.96" stroke="#C59820" stroke-width="0.9"/>
-                <text x="32" y="12.5" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#785A00" text-anchor="middle">Lg ${ascDMS}</text>
-            </g>
-        `;
+        const ascDeg = Math.floor(ascDegInSign);
+        const ascMin = Math.floor((ascDegInSign % 1) * 60);
 
-        // Render each house's planets
-        for (let h = 1; h <= 12; h++) {
-            const list = housePlanets[h];
-            if (!list || list.length === 0) continue;
+        let houseContentMarkup = '';
 
-            const zone = houseZones[h];
-            const badgeW = 66;
-            const badgeH = 16;
-            const stepY = 17;
-            const startY = (h === 1) ? 98 : zone.y - ((list.length - 1) * (stepY / 2));
+        for (let i = 0; i < 12; i++) {
+            const houseNum = i + 1;
+            const signNumber = ((ascendantSign + i - 1) % 12) + 1;
+            const rp = rashiPos[i];
+            const zone = zones[i];
+            const isLagnaHouse = (i === 0);
 
-            list.forEach((item, idx) => {
-                const p = item.planet;
-                const d = item.details;
-                const code = shortCodes[p] || p.substring(0, 2).toUpperCase();
-                const deg = Math.floor(d.degree);
-                const min = Math.floor((d.degree % 1) * 60);
+            // 1. Draw Rashi number at fixed outer corner position (AstroPsycho layout)
+            houseContentMarkup += `
+                <text x="${rp.x}" y="${rp.y}" font-family="'Cinzel', 'Noto Serif', serif" font-size="${isLagnaHouse ? '17' : '15'}" font-weight="700" fill="${isLagnaHouse ? '#785A00' : '#8A7A56'}" text-anchor="middle" dominant-baseline="middle">${signNumber}</text>
+            `;
 
-                let badgeColor = '#C59820';
-                let textColor = '#151528';
-                let symbolSuffix = '';
+            // 2. Collect items (Lagna marker for House 1 + planets)
+            const items = [];
+            if (isLagnaHouse) {
+                items.push({
+                    isLagna: true,
+                    code: 'Lg',
+                    deg: ascDeg,
+                    min: ascMin
+                });
+            }
 
-                if (d.isRetrograde || p === 'rahu' || p === 'ketu') {
-                    badgeColor = '#DC2626';
-                    symbolSuffix = ' <tspan fill="#DC2626" font-weight="bold">℞</tspan>';
+            for (const [p, d] of Object.entries(planetaryDetails)) {
+                if (d.house === houseNum) {
+                    items.push({
+                        isLagna: false,
+                        planet: p,
+                        code: shortCodes[p] || p.substring(0, 2).toUpperCase(),
+                        deg: Math.floor(d.degree),
+                        min: Math.floor((d.degree % 1) * 60),
+                        status: d.status,
+                        isRetrograde: d.isRetrograde || p === 'rahu' || p === 'ketu'
+                    });
                 }
-                if (d.status === 'Exalted') {
-                    symbolSuffix += ' <tspan fill="#059669" font-weight="bold">★</tspan>';
-                } else if (d.status === 'Debilitated') {
-                    symbolSuffix += ' <tspan fill="#DC2626" font-weight="bold">↓</tspan>';
-                }
+            }
 
-                const yOffset = startY + (idx * stepY);
-                planetsMarkup += `
-                    <g transform="translate(${zone.x - badgeW / 2}, ${yOffset - badgeH / 2})">
-                        <rect width="${badgeW}" height="${badgeH}" rx="3.5" fill="#FFFFFF" fill-opacity="0.97" stroke="${badgeColor}" stroke-width="0.75" filter="drop-shadow(0 1px 2px rgba(35,35,62,0.06))"/>
-                        <text x="${badgeW / 2}" y="11.5" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="${textColor}" text-anchor="middle">
-                            ${code} ${deg}°${String(min).padStart(2, '0')}'${symbolSuffix}
+            if (items.length === 0) continue;
+
+            const lineHeight = 21;
+            const totalHeight = items.length * lineHeight;
+            let startY = zone.y - (totalHeight / 2) + (lineHeight / 2);
+
+            items.forEach(item => {
+                if (item.isLagna) {
+                    houseContentMarkup += `
+                        <text x="${zone.x}" y="${startY}" text-anchor="middle" dominant-baseline="central">
+                            <tspan font-family="'Cinzel', 'Noto Serif', serif" font-weight="800" font-size="15" fill="#785A00">Lg</tspan>
+                            <tspan font-family="Inter, sans-serif" font-weight="600" font-size="11" fill="#785A00" dx="4">${item.deg}°${String(item.min).padStart(2, '0')}'</tspan>
                         </text>
-                    </g>
-                `;
+                    `;
+                } else {
+                    let suffixMarkup = '';
+                    if (item.status === 'Exalted') {
+                        suffixMarkup = '<tspan fill="#059669" font-weight="bold"> ↑</tspan>';
+                    } else if (item.status === 'Debilitated') {
+                        suffixMarkup = '<tspan fill="#DC2626" font-weight="bold"> ↓</tspan>';
+                    }
+                    if (item.isRetrograde) {
+                        suffixMarkup += '<tspan fill="#DC2626" font-weight="bold"> ℞</tspan>';
+                    }
+
+                    houseContentMarkup += `
+                        <text x="${zone.x}" y="${startY}" text-anchor="middle" dominant-baseline="central">
+                            <tspan font-family="Inter, sans-serif" font-weight="700" font-size="15" fill="#151528">${item.code}</tspan>${suffixMarkup}
+                            <tspan font-family="Inter, sans-serif" font-weight="500" font-size="11" fill="#525166" dx="4">${item.deg}°${String(item.min).padStart(2, '0')}'</tspan>
+                        </text>
+                    `;
+                }
+                startY += lineHeight;
             });
         }
 
-        // Numbers markup
-        let rashiNumbersMarkup = '';
-        for (let h = 1; h <= 12; h++) {
-            const pos = rashiPositions[h];
-            const sign = getSignForHouse(h);
-            const isLagna = (h === 1);
-            rashiNumbersMarkup += `
-                <text x="${pos.x}" y="${pos.y}" font-family="'Noto Serif', serif" font-size="${isLagna ? '12.5' : '11'}" font-weight="${isLagna ? '700' : '600'}" fill="${isLagna ? '#785A00' : '#807663'}" text-anchor="middle" dominant-baseline="central">${sign}</text>
-            `;
-        }
-
         return `
-            <svg viewBox="0 0 400 400" class="w-full h-full select-none" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="-2 -2 604 604" class="w-full h-full select-none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <linearGradient id="lagnaGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#C59820" stop-opacity="0.15"/>
-                        <stop offset="100%" stop-color="#FAF8F5" stop-opacity="0.7"/>
+                        <stop offset="0%" stop-color="#C59820" stop-opacity="0.16"/>
+                        <stop offset="100%" stop-color="#FAF8F5" stop-opacity="0.6"/>
                     </linearGradient>
                 </defs>
-                <rect width="400" height="400" rx="8" fill="#FAF8F5"/>
-                <rect x="6" y="6" width="388" height="388" fill="none" stroke="#C59820" stroke-width="1.8"/>
-                <rect x="12" y="12" width="376" height="376" fill="none" stroke="#C59820" stroke-width="0.8" stroke-opacity="0.3"/>
-                <!-- 1st House Highlight -->
-                <polygon points="200,12 300,112 200,200 100,112" fill="url(#lagnaGlow)"/>
-                <!-- Major Diagonals -->
-                <line x1="12" y1="12" x2="388" y2="388" stroke="#C59820" stroke-width="1.5"/>
-                <line x1="388" y1="12" x2="12" y2="388" stroke="#C59820" stroke-width="1.5"/>
+                <rect x="0" y="0" width="600" height="600" rx="12" fill="#FAF8F5"/>
+                <!-- 1st House Highlight (Lagna) -->
+                <polygon points="300,24 438,162 300,300 162,162" fill="url(#lagnaGlow)"/>
+                <!-- Outer Border -->
+                <rect x="24" y="24" width="552" height="552" fill="none" stroke="#C59820" stroke-width="2" stroke-opacity="0.85"/>
+                <!-- Inner Decorative Inset Border -->
+                <rect x="29" y="29" width="542" height="542" fill="none" stroke="#C59820" stroke-width="0.8" stroke-opacity="0.25"/>
                 <!-- Inscribed Center Diamond -->
-                <polygon points="200,12 388,200 200,388 12,200" fill="none" stroke="#C59820" stroke-width="1.5"/>
-                <!-- Inner House Dividers -->
-                <line x1="106" y1="106" x2="200" y2="12" stroke="#C59820" stroke-width="1" stroke-opacity="0.4"/>
-                <line x1="294" y1="106" x2="200" y2="12" stroke="#C59820" stroke-width="1" stroke-opacity="0.4"/>
-                <line x1="294" y1="294" x2="200" y2="388" stroke="#C59820" stroke-width="1" stroke-opacity="0.4"/>
-                <line x1="106" y1="294" x2="200" y2="388" stroke="#C59820" stroke-width="1" stroke-opacity="0.4"/>
-                <!-- Rashi Numbers -->
-                ${rashiNumbersMarkup}
-                <!-- Planetary Markers -->
-                ${planetsMarkup}
+                <path d="M300,24 L576,300 L300,576 L24,300 Z" fill="none" stroke="#C59820" stroke-width="2" stroke-opacity="0.85"/>
+                <!-- Major Corner Diagonals -->
+                <line x1="24" y1="24" x2="576" y2="576" stroke="#C59820" stroke-width="2" stroke-opacity="0.85"/>
+                <line x1="576" y1="24" x2="24" y2="576" stroke="#C59820" stroke-width="2" stroke-opacity="0.85"/>
+                <!-- House Content (Rashi numbers & Planets) -->
+                ${houseContentMarkup}
             </svg>
         `;
     }

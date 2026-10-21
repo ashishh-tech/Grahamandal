@@ -1,11 +1,11 @@
 /**
- * Graha Tracker Service Worker v2.1.8
+ * Graha Tracker Service Worker v2.1.9
  * - CRITICAL: Navigation requests (HTML page loads) are NOT intercepted.
  *   This avoids Cloudflare Pages 308 redirect ERR_FAILED issues.
  * - Static assets (CSS, JS, Fonts, Images): Stale-while-revalidate caching.
  */
 
-const CACHE_NAME = 'graha-tracker-v2.1.8';
+const CACHE_NAME = 'graha-tracker-v2.1.9';
 
 const CORE_ASSETS = [
     './styles.css',
@@ -14,6 +14,7 @@ const CORE_ASSETS = [
     './logo.svg',
     './favicon.svg',
     './favicon.png',
+    './chart-bg.png',
     './manifest.json',
     './js/astrology-engine-v8.js',
     './js/chart-renderer.js',

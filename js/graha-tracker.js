@@ -150,33 +150,33 @@
 
         // Visual coordinate anchors for house center and numbers
         const rashiPositions = {
-            1: { x: 200, y: 154 },
-            2: { x: 125, y: 72 },
-            3: { x: 68, y: 125 },
-            4: { x: 150, y: 200 },
-            5: { x: 68, y: 275 },
-            6: { x: 125, y: 335 },
-            7: { x: 200, y: 260 },
-            8: { x: 275, y: 335 },
-            9: { x: 332, y: 275 },
-            10: { x: 250, y: 200 },
-            11: { x: 332, y: 125 },
-            12: { x: 275, y: 72 }
+            1: { x: 200, y: 172 },
+            2: { x: 160, y: 30 },
+            3: { x: 32, y: 172 },
+            4: { x: 168, y: 200 },
+            5: { x: 32, y: 228 },
+            6: { x: 160, y: 370 },
+            7: { x: 200, y: 232 },
+            8: { x: 240, y: 370 },
+            9: { x: 368, y: 228 },
+            10: { x: 232, y: 200 },
+            11: { x: 368, y: 172 },
+            12: { x: 240, y: 30 }
         };
 
         const houseZones = {
-            1: { x: 200, y: 92 },
-            2: { x: 100, y: 48 },
-            3: { x: 48, y: 100 },
-            4: { x: 102, y: 200 },
-            5: { x: 48, y: 300 },
-            6: { x: 100, y: 352 },
-            7: { x: 200, y: 308 },
-            8: { x: 300, y: 352 },
-            9: { x: 352, y: 300 },
-            10: { x: 298, y: 200 },
-            11: { x: 352, y: 100 },
-            12: { x: 300, y: 48 }
+            1: { x: 200, y: 112 },
+            2: { x: 92, y: 52 },
+            3: { x: 56, y: 106 },
+            4: { x: 92, y: 200 },
+            5: { x: 56, y: 294 },
+            6: { x: 92, y: 348 },
+            7: { x: 200, y: 310 },
+            8: { x: 308, y: 348 },
+            9: { x: 344, y: 294 },
+            10: { x: 308, y: 200 },
+            11: { x: 344, y: 106 },
+            12: { x: 308, y: 52 }
         };
 
         const shortCodes = {
@@ -190,9 +190,9 @@
         const ascDegInSign = ascendant % 30;
         const ascDMS = `${Math.floor(ascDegInSign)}°${Math.floor((ascDegInSign % 1) * 60)}'`;
         planetsMarkup += `
-            <g transform="translate(166, 68)">
-                <rect width="68" height="19" rx="9.5" fill="#FFFFFF" fill-opacity="0.95" stroke="#C59820" stroke-width="0.9"/>
-                <text x="34" y="13.5" font-family="Inter, sans-serif" font-size="10.5" font-weight="700" fill="#785A00" text-anchor="middle">Lg ${ascDMS}</text>
+            <g transform="translate(168, 68)">
+                <rect width="64" height="18" rx="9" fill="#FFFFFF" fill-opacity="0.96" stroke="#C59820" stroke-width="0.9"/>
+                <text x="32" y="12.5" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#785A00" text-anchor="middle">Lg ${ascDMS}</text>
             </g>
         `;
 
@@ -202,7 +202,10 @@
             if (!list || list.length === 0) continue;
 
             const zone = houseZones[h];
-            const startY = (h === 1) ? 96 : zone.y - ((list.length - 1) * 11);
+            const badgeW = 66;
+            const badgeH = 16;
+            const stepY = 17;
+            const startY = (h === 1) ? 98 : zone.y - ((list.length - 1) * (stepY / 2));
 
             list.forEach((item, idx) => {
                 const p = item.planet;
@@ -225,11 +228,11 @@
                     symbolSuffix += ' <tspan fill="#DC2626" font-weight="bold">↓</tspan>';
                 }
 
-                const yOffset = startY + (idx * 21);
+                const yOffset = startY + (idx * stepY);
                 planetsMarkup += `
-                    <g transform="translate(${zone.x - 36}, ${yOffset - 9})">
-                        <rect width="72" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.96" stroke="${badgeColor}" stroke-width="0.75" filter="drop-shadow(0 1px 2px rgba(35,35,62,0.06))"/>
-                        <text x="36" y="12.5" font-family="Inter, sans-serif" font-size="9.5" font-weight="600" fill="${textColor}" text-anchor="middle">
+                    <g transform="translate(${zone.x - badgeW / 2}, ${yOffset - badgeH / 2})">
+                        <rect width="${badgeW}" height="${badgeH}" rx="3.5" fill="#FFFFFF" fill-opacity="0.97" stroke="${badgeColor}" stroke-width="0.75" filter="drop-shadow(0 1px 2px rgba(35,35,62,0.06))"/>
+                        <text x="${badgeW / 2}" y="11.5" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="${textColor}" text-anchor="middle">
                             ${code} ${deg}°${String(min).padStart(2, '0')}'${symbolSuffix}
                         </text>
                     </g>
@@ -244,7 +247,7 @@
             const sign = getSignForHouse(h);
             const isLagna = (h === 1);
             rashiNumbersMarkup += `
-                <text x="${pos.x}" y="${pos.y}" font-family="'Noto Serif', serif" font-size="${isLagna ? '13' : '11.5'}" font-weight="${isLagna ? '700' : '600'}" fill="${isLagna ? '#785A00' : '#63627A'}" text-anchor="middle">${sign}</text>
+                <text x="${pos.x}" y="${pos.y}" font-family="'Noto Serif', serif" font-size="${isLagna ? '12.5' : '11'}" font-weight="${isLagna ? '700' : '600'}" fill="${isLagna ? '#785A00' : '#807663'}" text-anchor="middle" dominant-baseline="central">${sign}</text>
             `;
         }
 

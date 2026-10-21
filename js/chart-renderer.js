@@ -53,33 +53,33 @@ class AstroChartRenderer {
         // Fixed rashi positions at outer tips/corners (zero-collision perimeter)
         const rashiPos = [
             { x: 300, y: 52 },   // H1  — top tip of upper diamond
-            { x: 145, y: 50 },   // H2  — top edge of top-left triangle
-            { x: 45, y: 75 },    // H3  — upper corner of left triangle (safe from center planets)
-            { x: 80, y: 300 },   // H4  — left tip of left diamond
-            { x: 45, y: 525 },   // H5  — lower corner of left triangle (safe from center planets)
-            { x: 145, y: 550 },  // H6  — bottom edge of bottom-left triangle
-            { x: 300, y: 550 },  // H7  — bottom tip of lower diamond
-            { x: 455, y: 550 },  // H8  — bottom edge of bottom-right triangle
-            { x: 555, y: 525 },  // H9  — lower corner of right triangle (safe from center planets)
-            { x: 520, y: 300 },  // H10 — right tip of right diamond
-            { x: 555, y: 75 },   // H11 — upper corner of right triangle (safe from center planets)
-            { x: 455, y: 50 }    // H12 — top edge of top-right triangle
+            { x: 162, y: 46 },   // H2  — top base center of top-left triangle
+            { x: 48,  y: 75 },   // H3  — upper corner of left triangle
+            { x: 75,  y: 300 },  // H4  — left tip of left diamond
+            { x: 48,  y: 525 },  // H5  — lower corner of left triangle
+            { x: 162, y: 554 },  // H6  — bottom base center of bottom-left triangle
+            { x: 300, y: 548 },  // H7  — bottom tip of lower diamond
+            { x: 438, y: 554 },  // H8  — bottom base center of bottom-right triangle
+            { x: 552, y: 525 },  // H9  — lower corner of right triangle
+            { x: 525, y: 300 },  // H10 — right tip of right diamond
+            { x: 552, y: 75 },   // H11 — upper corner of right triangle
+            { x: 438, y: 46 }    // H12 — top base center of top-right triangle
         ];
 
-        // Planet render zones — centroids where planets are vertically centered
+        // Planet render zones — centered on house symmetry axes with generous boundary clearance
         const zones = [
-            { x: 300, y: 198 },  // H1:  (300, 198) Top Center diamond
-            { x: 150, y: 110 },  // H2:  (150, 110) Top Left triangle
-            { x: 105, y: 165 },  // H3:  (105, 165) Left Upper triangle (safe from upper corner rashi)
-            { x: 195, y: 300 },  // H4:  (195, 300) Left Center diamond
-            { x: 105, y: 435 },  // H5:  (105, 435) Left Lower triangle (safe from lower corner rashi)
-            { x: 150, y: 490 },  // H6:  (150, 490) Bot Left triangle
-            { x: 300, y: 402 },  // H7:  (300, 402) Bot Center diamond
-            { x: 450, y: 490 },  // H8:  (450, 490) Bot Right triangle
-            { x: 495, y: 435 },  // H9:  (495, 435) Right Lower triangle (safe from lower corner rashi)
-            { x: 405, y: 300 },  // H10: (405, 300) Right Center diamond
-            { x: 495, y: 165 },  // H11: (495, 165) Right Upper triangle (safe from upper corner rashi)
-            { x: 450, y: 110 }   // H12: (450, 110) Top Right triangle
+            { x: 300, y: 175 },  // H1:  Top Center diamond
+            { x: 162, y: 88 },   // H2:  Top Left triangle (vertical axis x=162, well clear of diagonal y=x)
+            { x: 85,  y: 162 },  // H3:  Left Upper triangle (horizontal axis y=162, well clear of apex 162)
+            { x: 180, y: 300 },  // H4:  Left Center diamond
+            { x: 85,  y: 438 },  // H5:  Left Lower triangle (horizontal axis y=438, well clear of apex 162)
+            { x: 162, y: 512 },  // H6:  Bottom Left triangle (vertical axis x=162, well clear of apex 438)
+            { x: 300, y: 425 },  // H7:  Bottom Center diamond
+            { x: 438, y: 512 },  // H8:  Bottom Right triangle (vertical axis x=438, well clear of apex 438)
+            { x: 515, y: 438 },  // H9:  Right Lower triangle (horizontal axis y=438, well clear of apex 438)
+            { x: 420, y: 300 },  // H10: Right Center diamond
+            { x: 515, y: 162 },  // H11: Right Upper triangle (horizontal axis y=162, well clear of apex 438)
+            { x: 438, y: 88 }    // H12: Top Right triangle (vertical axis x=438, well clear of diagonal)
         ];
 
         const ascDegInSign = ascendant % 30;

@@ -169,34 +169,36 @@ class AstroChartRenderer {
 
         // Planet render zones — centre point where planets will be drawn
         const zones = [
-            { x: 300, y: 198 },  // House 1 (Top Center diamond)
-            { x: 150, y: 110 },  // House 2 (Top Left triangle)
-            { x: 105, y: 165 },  // House 3 (Left Upper triangle)
-            { x: 195, y: 300 },  // House 4 (Left Center diamond)
-            { x: 105, y: 435 },  // House 5 (Left Lower triangle)
-            { x: 150, y: 490 },  // House 6 (Bot Left triangle)
-            { x: 300, y: 402 },  // House 7 (Bot Center diamond)
-            { x: 450, y: 490 },  // House 8 (Bot Right triangle)
-            { x: 495, y: 435 },  // House 9 (Right Lower triangle)
-            { x: 405, y: 300 },  // House 10 (Right Center diamond)
-            { x: 495, y: 165 },  // House 11 (Right Upper triangle)
-            { x: 450, y: 110 }   // House 12 (Top Right triangle)
+            { x: size / 2, y: size * 0.33 },          // House 1 (Top Center diamond)
+            { x: size * 0.25, y: size * 0.15 },       // House 2 (Top Left triangle)
+            { x: size * 0.15, y: size * 0.25 },       // House 3 (Left Upper triangle)
+            { x: size * 0.33, y: size / 2 },           // House 4 (Left Center diamond)
+            { x: size * 0.15, y: size * 0.75 },       // House 5 (Left Lower triangle)
+            { x: size * 0.25, y: size * 0.85 },       // House 6 (Bot Left triangle)
+            { x: size / 2, y: size * 0.67 },           // House 7 (Bot Center diamond)
+            { x: size * 0.75, y: size * 0.85 },       // House 8 (Bot Right triangle)
+            { x: size * 0.85, y: size * 0.75 },       // House 9 (Right Lower triangle)
+            { x: size * 0.67, y: size / 2 },           // House 10 (Right Center diamond)
+            { x: size * 0.85, y: size * 0.25 },       // House 11 (Right Upper triangle)
+            { x: size * 0.75, y: size * 0.15 }        // House 12 (Top Right triangle)
         ];
 
-        // Fixed rashi number positions — intentionally placed at outer corners/tips
+        // Fixed rashi number positions — intentionally placed at the outer tip/corner
+        // of each house, far from the centre where planets are rendered.
+        // These are absolute pixel coords, handpicked for a 600px chart.
         const rashiPos = [
-            { x: 300, y: 52 },   // H1  — top tip of upper diamond
-            { x: 145, y: 50 },   // H2  — top edge of top-left triangle
-            { x: 45, y: 75 },    // H3  — upper corner of left triangle
-            { x: 80, y: 300 },   // H4  — left tip of left diamond
-            { x: 45, y: 525 },   // H5  — lower corner of left triangle
-            { x: 145, y: 550 },  // H6  — bottom edge of bottom-left triangle
+            { x: 300, y: 50 },   // H1  — top tip of upper diamond
+            { x: 145, y: 52 },   // H2  — top-left corner
+            { x: 52, y: 145 },  // H3  — left-top corner
+            { x: 112, y: 300 },  // H4  — left tip of left diamond
+            { x: 52, y: 455 },  // H5  — left-bottom corner
+            { x: 145, y: 548 },  // H6  — bottom-left corner
             { x: 300, y: 550 },  // H7  — bottom tip of lower diamond
-            { x: 455, y: 550 },  // H8  — bottom edge of bottom-right triangle
-            { x: 555, y: 525 },  // H9  — lower corner of right triangle
-            { x: 520, y: 300 },  // H10 — right tip of right diamond
-            { x: 555, y: 75 },   // H11 — upper corner of right triangle
-            { x: 455, y: 50 }    // H12 — top edge of top-right triangle
+            { x: 455, y: 548 },  // H8  — bottom-right corner
+            { x: 548, y: 455 },  // H9  — right-bottom corner
+            { x: 488, y: 300 },  // H10 — right tip of right diamond
+            { x: 548, y: 145 },  // H11 — right-top corner
+            { x: 455, y: 52 }    // H12 — top-right corner
         ];
 
         zones.forEach((zone, i) => {

@@ -101,7 +101,7 @@ class AstroChartRenderer {
                 : (isLagnaHouse ? '#785A00' : '#8A7A56');
 
             houseContentMarkup += `
-                <text x="${rp.x}" y="${rp.y}" font-family="'Cinzel', 'Noto Serif', serif" font-size="14" font-weight="700" fill="${rashiColor}" text-anchor="middle" dominant-baseline="middle">${signNumber}</text>
+                <text x="${rp.x}" y="${rp.y}" font-family="'Cinzel', 'Noto Serif', serif" font-size="12" font-weight="700" fill="${rashiColor}" text-anchor="middle" dominant-baseline="middle">${signNumber}</text>
             `;
 
             // 2. Collect items (Lagna badge for House 1 + planets)
@@ -131,7 +131,10 @@ class AstroChartRenderer {
 
             if (items.length === 0) continue;
 
-            const lineHeight = 15; // Compact line-height to prevent overlapping even in stelliums
+            // Adaptive line-height: tighter when many planets, but never below readable threshold
+            const lineHeight = items.length >= 4 ? 14 : 17;
+            const fontSize = items.length >= 4 ? 11 : 12;
+            const degFontSize = items.length >= 4 ? 7.5 : 8.5;
             const totalHeight = items.length * lineHeight;
             let startY = zone.y - (totalHeight / 2) + (lineHeight / 2);
 
@@ -140,8 +143,8 @@ class AstroChartRenderer {
                     const lgColor = isDark ? '#f4c430' : '#785A00';
                     houseContentMarkup += `
                         <text x="${zone.x}" y="${startY}" text-anchor="middle" dominant-baseline="central">
-                            <tspan font-family="'Cinzel', 'Noto Serif', serif" font-weight="800" font-size="14" fill="${lgColor}">Lg</tspan>
-                            <tspan font-family="Inter, sans-serif" font-weight="600" font-size="9.5" fill="${lgColor}" dx="3">${item.deg}°${String(item.min).padStart(2, '0')}'</tspan>
+                            <tspan font-family="'Cinzel', 'Noto Serif', serif" font-weight="800" font-size="${fontSize}" fill="${lgColor}">Lg</tspan>
+                            <tspan font-family="Inter, sans-serif" font-weight="600" font-size="${degFontSize}" fill="${lgColor}" dx="3">${item.deg}°${String(item.min).padStart(2, '0')}'</tspan>
                         </text>
                     `;
                 } else {
@@ -160,8 +163,8 @@ class AstroChartRenderer {
 
                     houseContentMarkup += `
                         <text x="${zone.x}" y="${startY}" text-anchor="middle" dominant-baseline="central">
-                            <tspan font-family="Inter, sans-serif" font-weight="700" font-size="14" fill="${planetCodeFill}">${item.code}</tspan>${suffixMarkup}
-                            <tspan font-family="Inter, sans-serif" font-weight="500" font-size="9.5" fill="${planetDegFill}" dx="3">${item.deg}°${String(item.min).padStart(2, '0')}'</tspan>
+                            <tspan font-family="Inter, sans-serif" font-weight="700" font-size="${fontSize}" fill="${planetCodeFill}">${item.code}</tspan>${suffixMarkup}
+                            <tspan font-family="Inter, sans-serif" font-weight="500" font-size="${degFontSize}" fill="${planetDegFill}" dx="3">${item.deg}°${String(item.min).padStart(2, '0')}'</tspan>
                         </text>
                     `;
                 }

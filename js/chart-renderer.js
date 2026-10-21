@@ -52,34 +52,34 @@ class AstroChartRenderer {
 
         // Fixed rashi positions at outer tips/corners (zero-collision perimeter)
         const rashiPos = [
-            { x: 300, y: 50 },   // H1  — top tip of upper diamond
-            { x: 145, y: 52 },   // H2  — top-left corner
-            { x: 52, y: 145 },  // H3  — left-top corner
-            { x: 112, y: 300 },  // H4  — left tip of left diamond
-            { x: 52, y: 455 },  // H5  — left-bottom corner
-            { x: 145, y: 548 },  // H6  — bottom-left corner
+            { x: 300, y: 52 },   // H1  — top tip of upper diamond
+            { x: 145, y: 50 },   // H2  — top edge of top-left triangle
+            { x: 45, y: 75 },    // H3  — upper corner of left triangle (safe from center planets)
+            { x: 80, y: 300 },   // H4  — left tip of left diamond
+            { x: 45, y: 525 },   // H5  — lower corner of left triangle (safe from center planets)
+            { x: 145, y: 550 },  // H6  — bottom edge of bottom-left triangle
             { x: 300, y: 550 },  // H7  — bottom tip of lower diamond
-            { x: 455, y: 548 },  // H8  — bottom-right corner
-            { x: 548, y: 455 },  // H9  — right-bottom corner
-            { x: 488, y: 300 },  // H10 — right tip of right diamond
-            { x: 548, y: 145 },  // H11 — right-top corner
-            { x: 455, y: 52 }    // H12 — top-right corner
+            { x: 455, y: 550 },  // H8  — bottom edge of bottom-right triangle
+            { x: 555, y: 525 },  // H9  — lower corner of right triangle (safe from center planets)
+            { x: 520, y: 300 },  // H10 — right tip of right diamond
+            { x: 555, y: 75 },   // H11 — upper corner of right triangle (safe from center planets)
+            { x: 455, y: 50 }    // H12 — top edge of top-right triangle
         ];
 
         // Planet render zones — centroids where planets are vertically centered
         const zones = [
-            { x: size / 2, y: size * 0.33 },          // H1:  (300, 198) Top Center diamond
-            { x: size * 0.25, y: size * 0.15 },       // H2:  (150, 90)  Top Left triangle
-            { x: size * 0.15, y: size * 0.25 },       // H3:  (90, 150)  Left Upper triangle
-            { x: size * 0.33, y: size / 2 },           // H4:  (198, 300) Left Center diamond
-            { x: size * 0.15, y: size * 0.75 },       // H5:  (90, 450)  Left Lower triangle
-            { x: size * 0.25, y: size * 0.85 },       // H6:  (150, 510) Bot Left triangle
-            { x: size / 2, y: size * 0.67 },           // H7:  (300, 402) Bot Center diamond
-            { x: size * 0.75, y: size * 0.85 },       // H8:  (450, 510) Bot Right triangle
-            { x: size * 0.85, y: size * 0.75 },       // H9:  (510, 450) Right Lower triangle
-            { x: size * 0.67, y: size / 2 },           // H10: (402, 300) Right Center diamond
-            { x: size * 0.85, y: size * 0.25 },       // H11: (510, 150) Right Upper triangle
-            { x: size * 0.75, y: size * 0.15 }        // H12: (450, 90)  Top Right triangle
+            { x: 300, y: 198 },  // H1:  (300, 198) Top Center diamond
+            { x: 150, y: 110 },  // H2:  (150, 110) Top Left triangle
+            { x: 105, y: 165 },  // H3:  (105, 165) Left Upper triangle (safe from upper corner rashi)
+            { x: 195, y: 300 },  // H4:  (195, 300) Left Center diamond
+            { x: 105, y: 435 },  // H5:  (105, 435) Left Lower triangle (safe from lower corner rashi)
+            { x: 150, y: 490 },  // H6:  (150, 490) Bot Left triangle
+            { x: 300, y: 402 },  // H7:  (300, 402) Bot Center diamond
+            { x: 450, y: 490 },  // H8:  (450, 490) Bot Right triangle
+            { x: 495, y: 435 },  // H9:  (495, 435) Right Lower triangle (safe from lower corner rashi)
+            { x: 405, y: 300 },  // H10: (405, 300) Right Center diamond
+            { x: 495, y: 165 },  // H11: (495, 165) Right Upper triangle (safe from upper corner rashi)
+            { x: 450, y: 110 }   // H12: (450, 110) Top Right triangle
         ];
 
         const ascDegInSign = ascendant % 30;

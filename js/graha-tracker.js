@@ -69,6 +69,19 @@
         return `${String(d).padStart(2, '0')}°${String(m).padStart(2, '0')}'${String(s).padStart(2, '0')}"`;
     }
 
+    function getLocalDateString(d) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+    }
+
+    function getLocalTimeString(d) {
+        const h = String(d.getHours()).padStart(2, '0');
+        const m = String(d.getMinutes()).padStart(2, '0');
+        return `${h}:${m}`;
+    }
+
     function checkGandanta(longitude) {
         // Gandanta occurs at the junctions of water and fire signs:
         // Pisces(356°-360°) - Aries(0°-3°20')
@@ -449,6 +462,62 @@
             clockEl.textContent = `${hrs}:${mins}:${secs} IST`;
         }
 
+        // Update Live / Custom Status Badge & Reset Button
+        const dotEl = document.getElementById('live-indicator-dot');
+        const statusLabel = document.getElementById('live-status-label');
+        const resetBtn = document.getElementById('reset-today-btn');
+        const resetText = document.getElementById('reset-btn-text');
+        const timeTravelLabel = document.getElementById('time-travel-label');
+
+        if (timeTravelLabel) {
+            timeTravelLabel.textContent = state.lang === 'HIN' ? 'समय गति / Step:' : 'Time Step / समय गति:';
+        }
+
+        if (state.isLive) {
+            if (dotEl) {
+                dotEl.innerHTML = `
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+                `;
+            }
+            if (statusLabel) {
+                statusLabel.textContent = state.lang === 'HIN' ? 'लाइव गोचर' : 'LIVE GOCHAR';
+                statusLabel.className = 'text-xs font-bold text-secondary uppercase tracking-wider';
+            }
+            if (resetBtn) {
+                resetBtn.className = 'px-2.5 py-0.5 rounded-full bg-primary-container text-on-primary text-xs font-semibold shadow-sm active:scale-95 transition-all flex items-center gap-1';
+            }
+            if (resetText) {
+                resetText.textContent = state.lang === 'HIN' ? 'आज Live' : 'Live Now';
+            }
+
+            // Keep date and time inputs in sync with current clock if user is not actively typing
+            const dateInput = document.getElementById('chart-date-input');
+            if (dateInput && document.activeElement !== dateInput) {
+                dateInput.value = getLocalDateString(state.currentDate);
+            }
+            const timeInput = document.getElementById('chart-time-input');
+            if (timeInput && document.activeElement !== timeInput) {
+                timeInput.value = getLocalTimeString(state.currentDate);
+            }
+        } else {
+            if (dotEl) {
+                dotEl.innerHTML = `
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary-container shadow-sm"></span>
+                `;
+            }
+            if (statusLabel) {
+                statusLabel.textContent = state.lang === 'HIN' ? 'विशेष समय' : 'CUSTOM TIME';
+                statusLabel.className = 'text-xs font-bold text-tertiary uppercase tracking-wider';
+            }
+            if (resetBtn) {
+                resetBtn.className = 'px-2.5 py-0.5 rounded-full bg-tertiary-container text-white text-xs font-bold shadow-md animate-pulse active:scale-95 transition-all flex items-center gap-1';
+            }
+            if (resetText) {
+                resetText.textContent = state.lang === 'HIN' ? '⚡ लाइव लौटें' : '⚡ Return Live';
+            }
+        }
+
         // Update Lagna Telemetry Badge
         const ascSignIdx = Math.floor(data.ascendant / 30);
         const ascSignEng = RASHIS_ENG[ascSignIdx];
@@ -506,23 +575,50 @@
             }
         }, 1000);
 
-        function getLocalDateString(d) {
-            const y = d.getFullYear();
-            const m = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            return `${y}-${m}-${day}`;
+        function setInputs(d) {
+            const dateInput = document.getElementById('chart-date-input');
+            if (dateInput) dateInput.value = getLocalDateString(d);
+            const timeInput = document.getElementById('chart-time-input');
+            if (timeInput) timeInput.value = getLocalTimeString(d);
         }
 
-        // Reset to Today button
+        function shiftTime(deltaMinutes) {
+            state.isLive = false;
+            state.currentDate = new Date(state.currentDate.getTime() + deltaMinutes * 60 * 1000);
+            setInputs(state.currentDate);
+            updateDashboard();
+        }
+
+        // Quick Steppers
+        const subHourBtn = document.getElementById('time-step-sub-hour');
+        if (subHourBtn) subHourBtn.addEventListener('click', () => shiftTime(-60));
+
+        const sub15Btn = document.getElementById('time-step-sub-15m');
+        if (sub15Btn) sub15Btn.addEventListener('click', () => shiftTime(-15));
+
+        const add15Btn = document.getElementById('time-step-add-15m');
+        if (add15Btn) add15Btn.addEventListener('click', () => shiftTime(15));
+
+        const addHourBtn = document.getElementById('time-step-add-hour');
+        if (addHourBtn) addHourBtn.addEventListener('click', () => shiftTime(60));
+
+        const nowBtn = document.getElementById('time-step-now');
+        if (nowBtn) {
+            nowBtn.addEventListener('click', () => {
+                state.isLive = true;
+                state.currentDate = new Date();
+                setInputs(state.currentDate);
+                updateDashboard();
+            });
+        }
+
+        // Reset to Today/Live button
         const resetBtn = document.getElementById('reset-today-btn');
         if (resetBtn) {
             resetBtn.addEventListener('click', () => {
                 state.isLive = true;
                 state.currentDate = new Date();
-                const dateInput = document.getElementById('chart-date-input');
-                if (dateInput) {
-                    dateInput.value = getLocalDateString(state.currentDate);
-                }
+                setInputs(state.currentDate);
                 updateDashboard();
             });
         }
@@ -539,6 +635,36 @@
                     state.currentDate.setMonth(parseInt(parts[1], 10) - 1);
                     state.currentDate.setDate(parseInt(parts[2], 10));
                     updateDashboard();
+                }
+            });
+        }
+
+        // Time input picker
+        const timeInput = document.getElementById('chart-time-input');
+        if (timeInput) {
+            timeInput.value = getLocalTimeString(state.currentDate);
+            timeInput.addEventListener('change', (e) => {
+                if (e.target.value) {
+                    state.isLive = false;
+                    const [h, m] = e.target.value.split(':');
+                    const hour = parseInt(h, 10);
+                    const minute = parseInt(m, 10);
+                    if (!isNaN(hour) && !isNaN(minute)) {
+                        state.currentDate.setHours(hour, minute, 0);
+                        updateDashboard();
+                    }
+                }
+            });
+            timeInput.addEventListener('input', (e) => {
+                if (e.target.value && e.target.value.includes(':')) {
+                    const [h, m] = e.target.value.split(':');
+                    const hour = parseInt(h, 10);
+                    const minute = parseInt(m, 10);
+                    if (!isNaN(hour) && !isNaN(minute)) {
+                        state.isLive = false;
+                        state.currentDate.setHours(hour, minute, 0);
+                        updateDashboard();
+                    }
                 }
             });
         }

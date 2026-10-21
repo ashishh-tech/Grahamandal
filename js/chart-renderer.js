@@ -177,20 +177,14 @@ class AstroChartRenderer {
         const borderOpacity = isDark ? '0.6' : '0.85';
 
         return `
-            <svg viewBox="-2 -2 604 604" preserveAspectRatio="xMidYMid meet" class="w-full h-full select-none" style="max-width: 100%; display: block; margin: 0 auto;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <svg viewBox="-2 -2 604 604" preserveAspectRatio="xMidYMid meet" class="w-full h-full select-none" style="max-width: 100%; display: block; margin: 0 auto;" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <clipPath id="chartClip">
-                        <rect x="0" y="0" width="600" height="600" rx="12"/>
-                    </clipPath>
                     <linearGradient id="lagnaGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="${borderColor}" stop-opacity="${isDark ? '0.25' : '0.20'}"/>
-                        <stop offset="100%" stop-color="${bgFill}" stop-opacity="0.5"/>
+                        <stop offset="0%" stop-color="${borderColor}" stop-opacity="${isDark ? '0.25' : '0.16'}"/>
+                        <stop offset="100%" stop-color="${bgFill}" stop-opacity="0.6"/>
                     </linearGradient>
                 </defs>
-                <!-- Base fill -->
                 <rect x="0" y="0" width="600" height="600" rx="12" fill="${bgFill}"/>
-                <!-- Celestial Background Artwork -->
-                <image href="./chart-bg.png" xlink:href="./chart-bg.png" x="0" y="0" width="600" height="600" preserveAspectRatio="xMidYMid slice" clip-path="url(#chartClip)" opacity="${isDark ? '0.25' : '0.92'}"/>
                 <!-- 1st House Highlight (Lagna) -->
                 <polygon points="300,24 438,162 300,300 162,162" fill="url(#lagnaGlow)"/>
                 <!-- Outer Border -->
@@ -244,8 +238,8 @@ class AstroChartRenderer {
         }
 
         const bgFill = isDark ? '#0A0A1F' : '#FAF8F5';
-        const cellFill = isDark ? '#14142B' : 'rgba(250, 248, 245, 0.45)';
-        const lagnaCellFill = isDark ? '#2A2518' : 'rgba(255, 243, 205, 0.65)';
+        const cellFill = isDark ? '#14142B' : '#FAF8F5';
+        const lagnaCellFill = isDark ? '#2A2518' : '#FFF9E6';
         const strokeColor = isDark ? '#f4c430' : '#C59820';
         const textColor = isDark ? '#f8f8ff' : '#151528';
         const lagnaTextColor = isDark ? '#f4c430' : '#785A00';
@@ -276,17 +270,11 @@ class AstroChartRenderer {
             }
         });
 
-        const centerBg = isDark ? '#121226' : 'rgba(245, 240, 230, 0.75)';
+        const centerBg = isDark ? '#121226' : '#F5F3F0';
 
         return `
-            <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet" class="w-full h-full select-none" style="max-width: 100%; display: block; margin: 0 auto;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <defs>
-                    <clipPath id="southChartClip">
-                        <rect width="400" height="400" rx="8"/>
-                    </clipPath>
-                </defs>
+            <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet" class="w-full h-full select-none" style="max-width: 100%; display: block; margin: 0 auto;" xmlns="http://www.w3.org/2000/svg">
                 <rect width="400" height="400" rx="8" fill="${bgFill}"/>
-                <image href="./chart-bg.png" xlink:href="./chart-bg.png" x="0" y="0" width="400" height="400" preserveAspectRatio="xMidYMid slice" clip-path="url(#southChartClip)" opacity="${isDark ? '0.25' : '0.92'}"/>
                 <!-- Center Empty Space -->
                 <rect x="${cell}" y="${cell}" width="${cell * 2}" height="${cell * 2}" fill="${centerBg}" stroke="${strokeColor}" stroke-width="1"/>
                 <text x="200" y="195" font-family="'Noto Serif', serif" font-size="16" font-weight="700" fill="${lagnaTextColor}" text-anchor="middle">दक्षिण भारतीय</text>

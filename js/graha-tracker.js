@@ -232,6 +232,24 @@
                         <span class="text-[11px] text-cosmic-slate font-medium bg-surface-container-low px-2 py-0.5 rounded-full">${houseName}</span>
                     </div>
 
+                    ${(window.personalTransit && window.personalTransit.profile) ? (() => {
+                        const prof = window.personalTransit.profile;
+                        const hLagna = ((signIdx - prof.ascSign + 12) % 12) + 1;
+                        const hMoon = ((signIdx - prof.moonSign + 12) % 12) + 1;
+                        return `
+                            <div class="flex items-center gap-1.5 pt-0.5 flex-wrap text-[11px]">
+                                <span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-semibold flex items-center gap-0.5">
+                                    <span class="material-symbols-outlined text-[12px]">explore</span>
+                                    ${state.lang === 'HIN' ? `लग्न से ${hLagna}वां भाव` : `Lagna: House ${hLagna}`}
+                                </span>
+                                <span class="px-2 py-0.5 rounded-full bg-secondary/10 text-secondary font-semibold flex items-center gap-0.5">
+                                    <span class="material-symbols-outlined text-[12px]">nightlight</span>
+                                    ${state.lang === 'HIN' ? `चंद्र से ${hMoon}वां भाव` : `Moon: House ${hMoon}`}
+                                </span>
+                            </div>
+                        `;
+                    })() : ''}
+
                     <div class="flex flex-col space-y-1">
                         <div class="flex justify-between items-center text-[11px] text-muted-lavender flex-wrap gap-1">
                             <span>Nakshatra: <strong class="text-cosmic-slate font-medium">${nakHin} (${nak.name})</strong> • Pada ${nak.pada}</span>
@@ -350,13 +368,76 @@
             lstEl.textContent = data.lstStr;
         }
 
+        // Determine chart ascendant and planetary details based on active viewMode
+        let chartAscendant = data.ascendant;
+        let chartPlanetaryDetails = data.planetaryDetails;
+
+        const chartMainTitle = document.getElementById('chart-main-title');
+        const chartMainSubtitle = document.getElementById('chart-main-subtitle');
+        const chartCaption = document.getElementById('chart-caption-text');
+
+        if (window.personalTransit && window.personalTransit.profile) {
+            const profile = window.personalTransit.profile;
+            const mode = window.personalTransit.viewMode || 'natal_lagna';
+
+            // Also trigger personal transit insights calculation
+            window.personalTransit.renderPersonalTransitInsights(data.planets);
+
+            if (mode === 'natal_lagna') {
+                chartAscendant = profile.ascendant;
+                chartPlanetaryDetails = {};
+                for (const [p, d] of Object.entries(data.planetaryDetails)) {
+                    const signIdx = Math.floor(d.longitude / 30);
+                    const houseFromNatalLagna = ((signIdx - profile.ascSign + 12) % 12) + 1;
+                    chartPlanetaryDetails[p] = {
+                        ...d,
+                        house: houseFromNatalLagna,
+                        degree: d.degree
+                    };
+                }
+                if (chartMainTitle) chartMainTitle.textContent = state.lang === 'HIN' ? 'लग्न गोचर (Lagna Transit)' : 'Lagna Transit (लग्न गोचर)';
+                if (chartMainSubtitle) chartMainSubtitle.textContent = state.lang === 'HIN' ? `${profile.name} के जन्म लग्न (${RASHIS_HIN[profile.ascSign]}) से भाव स्थिति` : `Live transits mapped to ${profile.name}'s Natal Houses (${RASHIS_ENG[profile.ascSign]} Lagna)`;
+                if (chartCaption) chartCaption.textContent = state.lang === 'HIN' ? `लग्न: ${RASHIS_HIN[profile.ascSign]} • गोचर ग्रह आपके 12 भावों में गतिमान हैं` : `Lagna: ${RASHIS_ENG[profile.ascSign]} • Real-time transiting planets in natal houses`;
+            } else if (mode === 'natal_moon') {
+                chartAscendant = profile.moonLongitude;
+                chartPlanetaryDetails = {};
+                for (const [p, d] of Object.entries(data.planetaryDetails)) {
+                    const signIdx = Math.floor(d.longitude / 30);
+                    const houseFromMoon = ((signIdx - profile.moonSign + 12) % 12) + 1;
+                    chartPlanetaryDetails[p] = {
+                        ...d,
+                        house: houseFromMoon,
+                        degree: d.degree
+                    };
+                }
+                if (chartMainTitle) chartMainTitle.textContent = state.lang === 'HIN' ? 'चंद्र गोचर (Chandra Transit)' : 'Chandra Transit (चंद्र गोचर)';
+                if (chartMainSubtitle) chartMainSubtitle.textContent = state.lang === 'HIN' ? `${profile.name} की जन्म राशि (${RASHIS_HIN[profile.moonSign]}) से पारंपरिक गोचर` : `Traditional Gochar mapped from ${profile.name}'s Moon Sign (${RASHIS_ENG[profile.moonSign]})`;
+                if (chartCaption) chartCaption.textContent = state.lang === 'HIN' ? `चंद्र राशि: ${RASHIS_HIN[profile.moonSign]} (${profile.moonNak.name}) • शास्त्रीय गोचर चक्र` : `Moon Sign: ${RASHIS_ENG[profile.moonSign]} • Classical transit chart from Chandra`;
+            } else if (mode === 'natal_birth') {
+                chartAscendant = profile.ascendant;
+                chartPlanetaryDetails = profile.birthChart.planetaryDetails;
+                if (chartMainTitle) chartMainTitle.textContent = state.lang === 'HIN' ? 'जन्म चक्र (Natal Chart)' : 'Janma Kundali (Birth Chart)';
+                if (chartMainSubtitle) chartMainSubtitle.textContent = state.lang === 'HIN' ? `${profile.name} की मूल जन्म पत्रिका (${profile.city})` : `Original Natal Kundali for ${profile.name} (${profile.city})`;
+                if (chartCaption) chartCaption.textContent = state.lang === 'HIN' ? `जन्म तिथि: ${profile.birthDate} ${profile.birthTime} • स्थिर जन्म पत्रिका` : `DOB: ${profile.birthDate} ${profile.birthTime} • Fixed Natal Chart`;
+            } else {
+                // Sky Mode
+                if (chartMainTitle) chartMainTitle.textContent = state.lang === 'HIN' ? 'लग्न कुण्डली (आकाशीय गोचर)' : 'Lagna Kundali (लग्न चक्र)';
+                if (chartMainSubtitle) chartMainSubtitle.textContent = state.lang === 'HIN' ? 'वर्तमान आकाश में उदित लग्न व ग्रहों की स्थिति' : 'Real-time sidereal planetary house placements';
+                if (chartCaption) chartCaption.textContent = state.lang === 'HIN' ? 'वर्तमान लग्न व भाव स्थिति लाइव परिकलित' : 'Real-time Lagna & sidereal house distribution calculated live';
+            }
+        } else {
+            if (chartMainTitle) chartMainTitle.textContent = state.lang === 'HIN' ? 'लग्न कुण्डली (आकाशीय गोचर)' : 'Lagna Kundali (लग्न चक्र)';
+            if (chartMainSubtitle) chartMainSubtitle.textContent = state.lang === 'HIN' ? 'वर्तमान आकाश में उदित लग्न व ग्रहों की स्थिति' : 'Real-time sidereal planetary house placements';
+            if (chartCaption) chartCaption.textContent = state.lang === 'HIN' ? 'वर्तमान लग्न व भाव स्थिति लाइव परिकलित' : 'Real-time Lagna & sidereal house distribution calculated live';
+        }
+
         // Render Kundali
         const chartContainer = document.getElementById('kundali-chart-svg');
         if (chartContainer) {
             if (state.chartStyle === 'north') {
-                chartContainer.innerHTML = renderNorthIndianSVG(data.ascendant, data.planetaryDetails);
+                chartContainer.innerHTML = renderNorthIndianSVG(chartAscendant, chartPlanetaryDetails);
             } else {
-                chartContainer.innerHTML = renderSouthIndianSVG(data.ascendant, data.planetaryDetails);
+                chartContainer.innerHTML = renderSouthIndianSVG(chartAscendant, chartPlanetaryDetails);
             }
         }
 
@@ -515,10 +596,42 @@
                 document.body.classList.toggle('night-observatory-mode');
             });
         }
+
+        // Telemetry location click to open profile / change location
+        const teleLocBtn = document.getElementById('telemetry-location-btn');
+        if (teleLocBtn) {
+            teleLocBtn.addEventListener('click', () => {
+                if (window.personalTransit) {
+                    window.personalTransit.openDrawer();
+                    const searchInput = document.getElementById('input-location-search');
+                    if (searchInput) searchInput.focus();
+                }
+            });
+        }
+
+        // Listen for Personal Transit & Location updates from OpenStreetMap & User Profile
+        window.addEventListener('grahamandal:transitUpdate', (e) => {
+            if (e.detail && e.detail.location) {
+                state.coords.lat = e.detail.location.lat;
+                state.coords.lon = e.detail.location.lon;
+                state.coords.city = e.detail.location.name;
+                const teleCity = document.getElementById('telemetry-city-name');
+                if (teleCity) teleCity.textContent = e.detail.location.name;
+            }
+            updateDashboard();
+        });
     }
 
     // Initialization on DOM ready
     function init() {
+        if (window.personalTransit && window.personalTransit.currentLocation) {
+            const loc = window.personalTransit.currentLocation;
+            state.coords.lat = loc.lat;
+            state.coords.lon = loc.lon;
+            state.coords.city = loc.name;
+            const teleCity = document.getElementById('telemetry-city-name');
+            if (teleCity) teleCity.textContent = loc.name;
+        }
         setupEvents();
         updateDashboard();
     }

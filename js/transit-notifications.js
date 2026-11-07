@@ -464,7 +464,7 @@
             this.notificationsEnabled = false;
             this.activeModalTransit = null;
             this.liveCelestialData = null;
-            this.activeDrawerTab = 'conjunctions'; // 'conjunctions' | 'states' | 'timeline'
+            this.activeDrawerTab = 'natal'; // 'natal' | 'conjunctions' | 'states' | 'timeline'
 
             this.init();
         }
@@ -563,14 +563,16 @@
                 const urlParams = typeof URLSearchParams !== 'undefined' ? new URLSearchParams(searchStr) : null;
                 const transitId = (urlParams && urlParams.get('transit')) || hashStr.replace('#transit=', '');
                 if (transitId) {
-                    if (transitId.startsWith('yuti-')) {
+                    if (transitId.startsWith('yuti-') || transitId.startsWith('natal-')) {
                         setTimeout(() => {
                             const profile = (window.personalTransit && window.personalTransit.profile) ? window.personalTransit.profile : null;
                             const planetaryDetails = (this.liveCelestialData && this.liveCelestialData.planetaryDetails) ? this.liveCelestialData.planetaryDetails : null;
                             if (planetaryDetails) {
-                                const { conjunctions } = this.calculateLiveAstrologicalPhenomena(planetaryDetails, profile);
-                                const conj = conjunctions.find(c => c.id === transitId) || conjunctions[0];
-                                if (conj) this.openConjunctionDetailModal(conj, profile);
+                                const { conjunctions, natalConjunctions } = this.calculateLiveAstrologicalPhenomena(planetaryDetails, profile);
+                                const item = (transitId.startsWith('natal-') && natalConjunctions)
+                                    ? (natalConjunctions.find(n => n.id === transitId) || natalConjunctions[0])
+                                    : (conjunctions.find(c => c.id === transitId) || conjunctions[0]);
+                                if (item) this.openConjunctionDetailModal(item, profile);
                             }
                         }, 500);
                     } else {
@@ -588,14 +590,16 @@
                 navigator.serviceWorker.addEventListener('message', (event) => {
                     if (event.data && event.data.type === 'OPEN_TRANSIT_MODAL') {
                         const transitId = event.data.transitId;
-                        if (transitId && transitId.startsWith('yuti-')) {
+                        if (transitId && (transitId.startsWith('yuti-') || transitId.startsWith('natal-'))) {
                             const profile = (window.personalTransit && window.personalTransit.profile) ? window.personalTransit.profile : null;
                             const planetaryDetails = (this.liveCelestialData && this.liveCelestialData.planetaryDetails) ? this.liveCelestialData.planetaryDetails : null;
                             if (planetaryDetails) {
-                                const { conjunctions } = this.calculateLiveAstrologicalPhenomena(planetaryDetails, profile);
-                                const conj = conjunctions.find(c => c.id === transitId) || conjunctions[0];
-                                if (conj) {
-                                    this.openConjunctionDetailModal(conj, profile);
+                                const { conjunctions, natalConjunctions } = this.calculateLiveAstrologicalPhenomena(planetaryDetails, profile);
+                                const item = (transitId.startsWith('natal-') && natalConjunctions)
+                                    ? (natalConjunctions.find(n => n.id === transitId) || natalConjunctions[0])
+                                    : (conjunctions.find(c => c.id === transitId) || conjunctions[0]);
+                                if (item) {
+                                    this.openConjunctionDetailModal(item, profile);
                                     return;
                                 }
                             }
@@ -622,6 +626,252 @@
         // ==========================================
         // CONJUNCTION (<6° ORB), COMBUSTION & MOTION ENGINE
         // ==========================================
+
+        /**
+         * Formulates personalized predictive outcome (फल) in Hinglish for a Transiting planet
+         * passing directly over a Natal planet (or Ascendant) within <= 6° orb.
+         */
+        getNatalTransitOutcome(tKey, nKey, houseLagna, userProfile) {
+            const hStr = `${getOrdinal(houseLagna)} House`;
+            const hData = HOUSE_OUTCOMES[houseLagna] || { phalaHinglish: `${hStr} life domain activation` };
+
+            // 1. Saturn over Natal Planets
+            if (tKey === 'saturn') {
+                if (nKey === 'moon') {
+                    return {
+                        themeHin: 'जन्म चंद्र पर शनि (शिखर साढ़ेसाती / Janma Shani)',
+                        outcome: `Janma Shani peak activation (${hStr}): Emotional resilience test. Meditation, disciplined lifestyle aur overthinking avoid karein.`
+                    };
+                }
+                if (nKey === 'sun') {
+                    return {
+                        themeHin: 'जन्म सूर्य पर शनि (कठोर श्रम व उत्तरदायित्व)',
+                        outcome: `Saturn over Natal Sun (${hStr}): Career restructuring & executive responsibility. Hard labor se lasting authority milegi, elders ka khayal rakhein.`
+                    };
+                }
+                if (nKey === 'mars') {
+                    return {
+                        themeHin: 'जन्म मंगल पर शनि (तकनीकी ऊर्जा व संयम)',
+                        outcome: `Saturn over Natal Mars (${hStr}): Mechanical/physical friction. Rash driving aur impulsive arguments avoid karein, structured actions lein.`
+                    };
+                }
+                if (nKey === 'mercury') {
+                    return {
+                        themeHin: 'जन्म बुध पर शनि (गहन वाणिज्यिक व बौद्धिक शोध)',
+                        outcome: `Saturn over Natal Mercury (${hStr}): Deep analytical focus, business contracts me precision, careful documentation check karein.`
+                    };
+                }
+                if (nKey === 'jupiter') {
+                    return {
+                        themeHin: 'जन्म गुरु पर शनि (धर्म-कर्म योग व परिपक्वता)',
+                        outcome: `Saturn over Natal Jupiter (${hStr}): Dharma-Karma alignment, financial discipline, traditional wisdom aur structured growth.`
+                    };
+                }
+                if (nKey === 'venus') {
+                    return {
+                        themeHin: 'जन्म शुक्र पर शनि (आर्थिक व दांपत्य संयम)',
+                        outcome: `Saturn over Natal Venus (${hStr}): Prudence in relationships & luxuries, realistic budget planning, mature partnerships.`
+                    };
+                }
+                if (nKey === 'saturn') {
+                    return {
+                        themeHin: 'शनि वापसी (Saturn Return ~30 वर्ष चक्र)',
+                        outcome: `Saturn Return milestone (${hStr}): Major 30-year karmic adulthood epoch. Destiny transition aur professional maturity ka golden base.`
+                    };
+                }
+                if (nKey === 'rahu' || nKey === 'ketu') {
+                    return {
+                        themeHin: 'जन्म राहु/केतु पर शनि (कार्मिक गांठों का निवारण)',
+                        outcome: `Saturn over Natal Nodal Axis (${hStr}): Karmic knot untangling, past-life ties resolution, ethical discipline is key.`
+                    };
+                }
+                if (nKey === 'ascendant') {
+                    return {
+                        themeHin: 'जन्म लग्न पर शनि (शारीरिक अनुशासन व नया आधार)',
+                        outcome: `Saturn over Natal Lagna (${hStr}): Physical vitality & health discipline, rigorous self-improvement, slow & enduring life foundation.`
+                    };
+                }
+            }
+
+            // 2. Jupiter over Natal Planets
+            if (tKey === 'jupiter') {
+                if (nKey === 'sun') {
+                    return {
+                        themeHin: 'जन्म सूर्य पर गुरु (राजकृपा, मान-सम्मान व नेतृत्व)',
+                        outcome: `Guru over Natal Sun (${hStr}): Royal executive boost! Higher management/mentor support, confidence surge aur leadership recognition.`
+                    };
+                }
+                if (nKey === 'moon') {
+                    return {
+                        themeHin: 'जन्म चंद्र पर गुरु (गजकेसरी गोचर अमृत फल)',
+                        outcome: `Gajakesari Gochar blessing (${hStr}): Exceptional mental tranquility, family prosperity, spiritual peace aur auspicious events.`
+                    };
+                }
+                if (nKey === 'mars') {
+                    return {
+                        themeHin: 'जन्म मंगल पर गुरु (साहस, भूमि व उद्यम सिद्धि)',
+                        outcome: `Guru over Natal Mars (${hStr}): Courageous enterprise, property/land gains, strategic business win, energetic optimism.`
+                    };
+                }
+                if (nKey === 'mercury') {
+                    return {
+                        themeHin: 'जन्म बुध पर गुरु (वाणिज्यिक विस्तार व तीक्ष्ण बुद्धि)',
+                        outcome: `Guru over Natal Mercury (${hStr}): Commercial expansion, high intellect, persuasive diplomacy, exam/trading success.`
+                    };
+                }
+                if (nKey === 'jupiter') {
+                    return {
+                        themeHin: 'गुरु वापसी (Jupiter Return ~12 वर्ष चक्र)',
+                        outcome: `Jupiter Return celebration (${hStr}): 12-year dharmic renewal! High spiritual wisdom, childbirth/family expansion aur fortune surge.`
+                    };
+                }
+                if (nKey === 'venus') {
+                    return {
+                        themeHin: 'जन्म शुक्र पर गुरु (वैवाहिक सुख, ऐश्वर्य व कला)',
+                        outcome: `Guru over Natal Venus (${hStr}): Romantic bliss, wedding auspiciousness, artistic grace aur financial wealth blessing.`
+                    };
+                }
+                if (nKey === 'saturn') {
+                    return {
+                        themeHin: 'जन्म शनि पर गुरु (कष्ट मुक्ति व स्थायी समृद्धि)',
+                        outcome: `Guru over Natal Saturn (${hStr}): Karmic relief! Past burdens lift honge, durable career stability aur ethical prosperity.`
+                    };
+                }
+                if (nKey === 'rahu' || nKey === 'ketu') {
+                    return {
+                        themeHin: 'जन्म राहु/केतु पर गुरु (आध्यात्मिक जागृति व विस्तार)',
+                        outcome: `Guru over Natal Nodal Axis (${hStr}): Spiritual enlightenment, breakthrough philosophical ideas, positive foreign avenues.`
+                    };
+                }
+                if (nKey === 'ascendant') {
+                    return {
+                        themeHin: 'जन्म लग्न पर गुरु (परम आरोग्य व दिव्य आभा)',
+                        outcome: `Divine Guru over Natal Lagna (${hStr}): Golden vitality, charismatic aura, supreme health recovery aur optimistic new life chapter.`
+                    };
+                }
+            }
+
+            // 3. Mars over Natal Planets
+            if (tKey === 'mars') {
+                if (nKey === 'mars') {
+                    return {
+                        themeHin: 'मंगल वापसी (Mars Return ~2 वर्ष चक्र)',
+                        outcome: `Mars Return (${hStr}): High energy reboot. Bold actions, athletic stamina; impulsive rashness avoid karein.`
+                    };
+                }
+                if (nKey === 'moon') {
+                    return {
+                        themeHin: 'जन्म चंद्र पर मंगल (चंद्र-मंगल गतिशील ऊर्जा)',
+                        outcome: `Mars over Natal Moon (${hStr}): Chandra-Mangal dynamic drive; high commerce ambition, calm speech zaroori.`
+                    };
+                }
+                if (nKey === 'venus') {
+                    return {
+                        themeHin: 'जन्म शुक्र पर मंगल (तीव्र आकर्षण व रचनात्मकता)',
+                        outcome: `Mars over Natal Venus (${hStr}): High romantic passion, dynamic creative energy; impulse shopping control karein.`
+                    };
+                }
+                if (nKey === 'ascendant') {
+                    return {
+                        themeHin: 'जन्म लग्न पर मंगल (असीम पराक्रम व स्फूर्ति)',
+                        outcome: `Mars over Natal Lagna (${hStr}): High adrenaline, physical stamina, dynamic initiative; patience maintain karein.`
+                    };
+                }
+            }
+
+            // 4. Sun over Natal Planets
+            if (tKey === 'sun') {
+                if (nKey === 'sun') {
+                    return {
+                        themeHin: 'सूर्य वापसी (Solar Return / वर्ष कुंडली संचरण)',
+                        outcome: `Solar Return birthday epoch (${hStr}): Vitality renewal, executive clarity, life purpose reactivation.`
+                    };
+                }
+                if (nKey === 'moon') {
+                    return {
+                        themeHin: 'जन्म चंद्र पर सूर्य (आत्म-मन एकाग्रता)',
+                        outcome: `Sun over Natal Moon (${hStr}): Mind-Soul alignment, new monthly emotional cycle, clarity on inner feelings.`
+                    };
+                }
+                if (nKey === 'ascendant') {
+                    return {
+                        themeHin: 'जन्म लग्न पर सूर्य (तेज, प्रतिष्ठा व आत्मबल)',
+                        outcome: `Sun over Natal Lagna (${hStr}): High vitality, confidence aura, personal presence me illumination.`
+                    };
+                }
+            }
+
+            // 5. Venus over Natal Planets
+            if (tKey === 'venus') {
+                if (nKey === 'venus') {
+                    return {
+                        themeHin: 'शुक्र वापसी (Venus Return / सौंदर्य व आकर्षण)',
+                        outcome: `Venus Return (${hStr}): Aesthetic rejuvenation, romantic harmony, social charm, luxury appreciation.`
+                    };
+                }
+                if (nKey === 'moon') {
+                    return {
+                        themeHin: 'जन्म चंद्र पर शुक्र (सुखद संवाद व आमोद-प्रमोद)',
+                        outcome: `Venus over Natal Moon (${hStr}): Sweet domestic comfort, pleasant conversations, artistic inspiration.`
+                    };
+                }
+                if (nKey === 'ascendant') {
+                    return {
+                        themeHin: 'जन्म लग्न पर शुक्र (आकर्षक व्यक्तित्व व सौम्यता)',
+                        outcome: `Venus over Natal Lagna (${hStr}): Charming magnetic presence, aesthetic style, joyful relationships.`
+                    };
+                }
+            }
+
+            // 6. Mercury over Natal Planets
+            if (tKey === 'mercury') {
+                if (nKey === 'mercury') {
+                    return {
+                        themeHin: 'बुध वापसी (Mercury Return / वाणिज्यिक चपलता)',
+                        outcome: `Mercury Return (${hStr}): Quick calculations, business negotiations, witty speech, digital networking.`
+                    };
+                }
+                if (nKey === 'ascendant') {
+                    return {
+                        themeHin: 'जन्म लग्न पर बुध (तीक्ष्ण प्रत्युत्पन्नमतित्व)',
+                        outcome: `Mercury over Natal Lagna (${hStr}): Fast intellectual response, articulate communication, youthful enthusiasm.`
+                    };
+                }
+            }
+
+            // 7. Moon over Natal Planets (~2.25 Days Transit)
+            if (tKey === 'moon') {
+                const targetName = PLANET_META[nKey]?.name || nKey;
+                return {
+                    themeHin: `जन्म ${PLANET_META[nKey]?.hin || nKey} पर चंद्र गोचर (~2 दिन)`,
+                    outcome: `Chandra 2-day sensitive trigger (${hStr}): Quick emotional focus aur intuitive alignment with Natal ${targetName}.`
+                };
+            }
+
+            // 8. Rahu / Ketu over Natal Planets
+            if (tKey === 'rahu') {
+                const targetName = PLANET_META[nKey]?.name || nKey;
+                return {
+                    themeHin: `जन्म ${PLANET_META[nKey]?.hin || nKey} पर राहु संचरण`,
+                    outcome: `Rahu over Natal ${targetName} (${hStr}): Intense karmic drive, sudden unconventional ambitions; avoid speculative haste.`
+                };
+            }
+            if (tKey === 'ketu') {
+                const targetName = PLANET_META[nKey]?.name || nKey;
+                return {
+                    themeHin: `जन्म ${PLANET_META[nKey]?.hin || nKey} पर केतु संचरण`,
+                    outcome: `Ketu over Natal ${targetName} (${hStr}): Spiritual detachment, intuitive insights, inner research; focus on meditation.`
+                };
+            }
+
+            // Default fallback
+            const tName = PLANET_META[tKey]?.name || tKey;
+            const nName = PLANET_META[nKey]?.name || nKey;
+            return {
+                themeHin: `गोचर ${PLANET_META[tKey]?.hin || tKey} का जन्म ${PLANET_META[nKey]?.hin || nKey} पर प्रभाव`,
+                outcome: `${tName} transit activating Natal ${nName} in ${hStr}: ${hData.phalaHinglish || 'Personal chart activation'}.`
+            };
+        }
 
         /**
          * Computes concise, actionable predictive outcome (फल) for any conjunction in Hinglish,
@@ -1012,7 +1262,98 @@
                 }
             });
 
-            return { conjunctions, states };
+            // 3. NATAL PLANET ACTIVATIONS (GOCHAR OVER NATAL PLANETS <= 6° ORB)
+            const natalConjunctions = [];
+            if (userProfile && (userProfile.birthChart || userProfile.ascSign !== undefined)) {
+                const nPlanets = (userProfile.birthChart && userProfile.birthChart.planets) ? userProfile.birthChart.planets : {};
+                const ascLon = userProfile.ascendant || (userProfile.birthChart && userProfile.birthChart.ascendant) || (userProfile.ascSign !== undefined ? userProfile.ascSign * 30 : null);
+                const moonLon = nPlanets.moon !== undefined ? nPlanets.moon : userProfile.moonLongitude;
+
+                const natalList = [];
+                if (ascLon !== null && ascLon !== undefined) {
+                    natalList.push({ key: 'ascendant', name: 'Ascendant (Lagna)', hin: 'लग्न', emoji: '♈', lon: ascLon });
+                }
+                if (moonLon !== null && moonLon !== undefined) {
+                    natalList.push({ key: 'moon', name: 'Moon', hin: 'चन्द्र', emoji: '🌙', lon: moonLon });
+                }
+                const otherGrahas = ['sun', 'mars', 'mercury', 'jupiter', 'venus', 'saturn', 'rahu', 'ketu'];
+                otherGrahas.forEach(gk => {
+                    if (nPlanets[gk] !== undefined && nPlanets[gk] !== null) {
+                        const m = PLANET_META[gk];
+                        natalList.push({ key: gk, name: m.name, hin: m.hin, emoji: m.emoji, lon: nPlanets[gk] });
+                    }
+                });
+
+                pList.forEach(tKey => {
+                    const tDetail = planetaryDetails[tKey];
+                    if (!tDetail) return;
+                    const tSign = Math.floor(tDetail.longitude / 30);
+                    const tDeg = tDetail.degree !== undefined ? tDetail.degree : (tDetail.longitude % 30);
+                    const tMeta = PLANET_META[tKey];
+
+                    natalList.forEach(nItem => {
+                        const nSign = Math.floor(nItem.lon / 30);
+
+                        // Check if transiting planet occupies the same sign as natal planet
+                        if (tSign === nSign) {
+                            const nDeg = nItem.lon % 30;
+                            const degDiff = Math.abs(tDeg - nDeg);
+
+                            // USER'S EXPLICIT REQUIREMENT: <= 6 degree orb
+                            if (degDiff <= 6.0) {
+                                const degInt = Math.floor(degDiff);
+                                const minInt = Math.round((degDiff - degInt) * 60);
+                                const orbStr = `${degInt}°${String(minInt).padStart(2, '0')}'`;
+                                const isExactHit = degDiff <= 1.0;
+
+                                const ascBase = userProfile.ascSign !== undefined ? userProfile.ascSign : Math.floor(ascLon / 30);
+                                const moonBase = userProfile.moonSign !== undefined ? userProfile.moonSign : (moonLon ? Math.floor(moonLon / 30) : 0);
+
+                                const houseLagna = ((tSign - ascBase + 12) % 12) + 1;
+                                const houseMoon = ((tSign - moonBase + 12) % 12) + 1;
+                                const rashiHin = RASHIS_HIN[tSign];
+                                const rashiEng = RASHIS_ENG[tSign];
+
+                                const natalOutcome = this.getNatalTransitOutcome(tKey, nItem.key, houseLagna, userProfile);
+
+                                natalConjunctions.push({
+                                    id: `natal-${tKey}-${nItem.key}`,
+                                    p1: tKey,
+                                    p2: nItem.key,
+                                    tKey,
+                                    nKey: nItem.key,
+                                    meta1: tMeta,
+                                    meta2: nItem,
+                                    tMeta,
+                                    nMeta: nItem,
+                                    deg1: tDeg,
+                                    deg2: nDeg,
+                                    tDeg,
+                                    nDeg,
+                                    degDiff,
+                                    orbStr,
+                                    isExactHit,
+                                    isHighImpact: true,
+                                    signIdx: tSign,
+                                    rashiHin,
+                                    rashiEng,
+                                    houseLagna,
+                                    houseMoon,
+                                    outcomeSummary: natalOutcome.outcome,
+                                    outcome: natalOutcome.outcome,
+                                    themeHin: natalOutcome.themeHin,
+                                    titleHin: `गोचर ${tMeta.hin} ➔ जन्म ${nItem.hin} (${orbStr})`,
+                                    titleEng: `Transiting ${tMeta.name} over Natal ${nItem.name} (${orbStr})`
+                                });
+                            }
+                        }
+                    });
+                });
+
+                natalConjunctions.sort((a, b) => a.degDiff - b.degDiff);
+            }
+
+            return { conjunctions, states, natalConjunctions };
         }
 
         // ==========================================
@@ -1310,16 +1651,31 @@
 
             const profile = (window.personalTransit && window.personalTransit.profile) ? window.personalTransit.profile : null;
 
-            // Check if there is an active live conjunction < 6° in the sky right now
+            // Check if there is an active Natal Conjunction (<6° orb) or sky conjunction
+            let activeNatalConj = null;
             let activeConjunction = null;
             if (this.liveCelestialData && this.liveCelestialData.planetaryDetails) {
-                const { conjunctions } = this.calculateLiveAstrologicalPhenomena(this.liveCelestialData.planetaryDetails, profile);
-                if (conjunctions.length > 0) {
+                const { conjunctions, natalConjunctions } = this.calculateLiveAstrologicalPhenomena(this.liveCelestialData.planetaryDetails, profile);
+                if (natalConjunctions && natalConjunctions.length > 0) {
+                    activeNatalConj = natalConjunctions[0];
+                }
+                if (conjunctions && conjunctions.length > 0) {
                     activeConjunction = conjunctions[0]; // Nearest conjunction
                 }
             }
 
-            if (activeConjunction && activeConjunction.isHighImpact) {
+            if (activeNatalConj) {
+                // Send highest priority Natal Hit notification (<6° orb)!
+                const userName = profile ? (profile.name || 'Seeker') : 'Seeker';
+                const title = `🎯 Natal Hit: Transiting ${activeNatalConj.tMeta.name} over Natal ${activeNatalConj.nMeta.name} (Orb: ${activeNatalConj.orbStr})`;
+                const body = `${userName} ji (${getOrdinal(activeNatalConj.houseLagna)} House me): 🎯 Outcome: ${activeNatalConj.outcome}`;
+
+                this.sendNativePushAlert({
+                    title: title,
+                    body: body,
+                    transitId: activeNatalConj.id
+                });
+            } else if (activeConjunction && activeConjunction.isHighImpact) {
                 // Send high-impact Conjunction alert (<6° orb) with explicit outcome!
                 const notifData = this.generateConjunctionNotificationData(activeConjunction, profile);
 
@@ -1387,6 +1743,109 @@
 
             const profile = (window.personalTransit && window.personalTransit.profile) ? window.personalTransit.profile : null;
             const planetaryDetails = (this.liveCelestialData && this.liveCelestialData.planetaryDetails) ? this.liveCelestialData.planetaryDetails : null;
+
+            // TAB 0: NATAL ACTIVATIONS (< 6° ORB OVER NATAL GRAHAS)
+            if (this.activeDrawerTab === 'natal') {
+                if (!planetaryDetails) {
+                    listEl.innerHTML = `<div class="p-4 text-center text-xs text-muted-lavender bg-white rounded-xl">Calculating live planetary coordinates...</div>`;
+                    return;
+                }
+
+                if (!profile || !profile.birthChart) {
+                    listEl.innerHTML = `
+                        <div class="p-4 text-center bg-surface-container-lowest rounded-xl border border-primary/20 space-y-2">
+                            <span class="material-symbols-outlined text-3xl text-primary">person_pin</span>
+                            <div class="font-bold text-cosmic-slate text-sm">Personal Natal Transit Locked</div>
+                            <p class="text-xs text-muted-lavender leading-relaxed">
+                                Save your birth chart in the <strong>Personal Transit</strong> view. Grahamandal will track live celestial transits directly over your <strong>Natal Planets within &le; 6&deg; orb</strong>!
+                            </p>
+                            <button type="button" onclick="document.querySelector('[data-view=\\'personal\\']')?.click() || (window.personalTransit && window.personalTransit.toggleDrawer && window.personalTransit.toggleDrawer(true))" class="px-3 py-1.5 rounded-lg bg-primary text-white font-bold text-xs shadow-sm mt-1">
+                                + Add Birth Chart (जन्म विवरण भरें)
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const { natalConjunctions } = this.calculateLiveAstrologicalPhenomena(planetaryDetails, profile);
+
+                if (!natalConjunctions || natalConjunctions.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="p-4 text-center text-xs text-muted-lavender bg-surface-container-lowest rounded-xl border border-black/5 space-y-1">
+                            <span class="material-symbols-outlined text-2xl text-secondary mb-1 block">verified_user</span>
+                            <div class="font-bold text-cosmic-slate">No Transit over Natal Planets (&le;6&deg;)</div>
+                            <span>Currently no transiting planet is within 6&deg; of your natal planets. Jaise hi koi graha aapke janma graha ke 6&deg; daayre me aayega, instant alert trigger hoga!</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                natalConjunctions.forEach(c => {
+                    const hitBadge = c.isExactHit
+                        ? `<span class="px-2 py-0.5 rounded-full text-[10px] bg-retrograde-ruby text-white font-bold animate-pulse">⚡ Exact Hit (< 1°)</span>`
+                        : `<span class="px-2 py-0.5 rounded-full text-[10px] bg-tertiary-container text-white font-bold animate-pulse">🔥 Natal Hit (< 6°)</span>`;
+
+                    html += `
+                        <div class="flex flex-col bg-surface-container-lowest p-3 rounded-xl border border-primary/40 shadow-md space-y-2 hover:border-gold-border-focus transition-all cursor-pointer group" data-natal-id="${c.id}">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <div class="flex items-center -space-x-1 shrink-0">
+                                        <span class="w-7 h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm shadow-sm border border-primary/20 z-10">${c.tMeta.emoji}</span>
+                                        <span class="w-7 h-7 rounded-full bg-secondary/10 text-secondary flex items-center justify-center text-sm shadow-sm border border-secondary/20">${c.nMeta.emoji}</span>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h4 class="text-xs font-bold text-cosmic-slate group-hover:text-primary transition-colors truncate">
+                                            Gochar ${c.tMeta.hin} ➔ Janma ${c.nMeta.hin}
+                                        </h4>
+                                        <div class="text-[11px] text-muted-lavender truncate">
+                                            ${c.tMeta.name} (${c.tDeg.toFixed(1)}°) over Natal ${c.nMeta.name} (${c.nDeg.toFixed(1)}°) in ${c.rashiEng}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="shrink-0 flex flex-col items-end gap-1">
+                                    ${hitBadge}
+                                    <span class="text-[10px] text-muted-lavender font-mono font-semibold">Orb: ${c.orbStr}</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-1.5 pt-0.5 text-[11px] font-semibold text-primary">
+                                <span>${profile.name} के लग्न से: <strong>${c.houseLagna}वां भाव (${getOrdinal(c.houseLagna)} House)</strong></span>
+                                <span>•</span>
+                                <span>चंद्र से: <strong>${c.houseMoon}वां भाव</strong></span>
+                            </div>
+
+                            <!-- Explicit Hinglish Outcome Box -->
+                            <div class="p-2 rounded-lg bg-primary-container/20 border border-primary/30 text-[11px] text-cosmic-slate font-medium leading-relaxed">
+                                <span class="font-bold text-primary block text-[10px] uppercase tracking-wider mb-0.5">🎯 Predicted Outcome (फल)</span>
+                                <span>${c.outcome}</span>
+                            </div>
+
+                            <div class="flex items-center justify-between text-[10px] text-muted-lavender pt-1 border-t border-black/5">
+                                <span>${c.themeHin}</span>
+                                <span class="text-primary font-bold group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                                    <span>Details</span>
+                                    <span class="material-symbols-outlined text-[12px]">chevron_right</span>
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                listEl.innerHTML = html;
+
+                listEl.querySelectorAll('[data-natal-id]').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const nId = card.getAttribute('data-natal-id');
+                        const item = natalConjunctions.find(n => n.id === nId);
+                        if (item) {
+                            this.closeAlertsDrawer();
+                            this.openConjunctionDetailModal(item, profile);
+                        }
+                    });
+                });
+                return;
+            }
 
             // TAB 1: CONJUNCTIONS (< 6° ORB & YUTIS)
             if (this.activeDrawerTab === 'conjunctions') {

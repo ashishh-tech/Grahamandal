@@ -294,20 +294,20 @@
         }
     };
 
-    // Classical House Significations & Predictive Outcomes
+    // Classical House Significations & Predictive Outcomes (Bilingual / Hinglish)
     const HOUSE_OUTCOMES = {
-        1: { nameHin: 'प्रथम भाव (लग्न/तनु)', phalaHin: 'व्यक्तित्व, स्वास्थ्य, आत्मबल व नई कार्य-योजनाओं में अप्रत्याशित तेजी' },
-        2: { nameHin: 'द्वितीय भाव (धन/वाणी)', phalaHin: 'धन संचय, वाणी प्रभाव, कुटुंब सुख व आर्थिक मामलों में महत्वपूर्ण लाभ' },
-        3: { nameHin: 'तृतीय भाव (सहज/पराक्रम)', phalaHin: 'साहस, गूढ़ शोध, पराक्रम व संचार में सफलता। भाई-बहनों से समझदारी रखें' },
-        4: { nameHin: 'चतुर्थ भाव (सुख/मातृ)', phalaHin: 'गृह-सुख, वाहन, माता का सानिध्य व मानसिक शांति में विशेष प्रभाव' },
-        5: { nameHin: 'पंचम भाव (सुत/बुद्धि)', phalaHin: 'बौद्धिक निर्णय, संतान सुख, उच्च विद्या, मंत्र सिद्धि व आकस्मिक लाभ' },
-        6: { nameHin: 'षष्ठ भाव (रिपु/रोग)', phalaHin: 'प्रतियोगिता व शत्रुओं पर विजय, रोग मुक्ति व कर्मठता। विवादों से बचें' },
-        7: { nameHin: 'सप्तम भाव (जाया/व्यापार)', phalaHin: 'साझेदारी, व्यापारिक विस्तार, जनसंपर्क व दांपत्य जीवन पर गहरा प्रभाव' },
-        8: { nameHin: 'अष्टम भाव (आयु/गूढ़)', phalaHin: 'गूढ़ विद्या, शोध, गुप्त ज्ञान, आकस्मिक धन व पैतृक संपत्ति लाभ' },
-        9: { nameHin: 'नवम भाव (भाग्य/धर्म)', phalaHin: 'भाग्योदय, धार्मिक यात्रा, उच्च दर्शन, पिता व गुरुजनों का आशीर्वाद' },
-        10: { nameHin: 'दशम भाव (कर्म/आजीविका)', phalaHin: 'करियर उत्थान, पद-प्रतिष्ठा, प्रशासनिक अधिकार व कार्यक्षेत्र में उन्नति' },
-        11: { nameHin: 'एकादश भाव (आय/लाभ)', phalaHin: 'सर्व कार्य सिद्धि, बड़े आर्थिक लाभ, महत्वाकांक्षा पूर्ति व मित्रों का सहयोग' },
-        12: { nameHin: 'द्वादश भाव (व्यय/मोक्ष)', phalaHin: 'व्यय नियंत्रण, विदेश यात्रा, एकांत साधना, दान-पुण्य व आध्यात्मिक शांति' }
+        1: { nameHin: 'प्रथम भाव (लग्न/तनु)', nameHinglish: '1st House (Lagna)', phalaHin: 'व्यक्तित्व, स्वास्थ्य, आत्मबल व नई कार्य-योजनाओं में अप्रत्याशित तेजी', phalaHinglish: 'Personality, vitality, confidence aur new projects me strong momentum' },
+        2: { nameHin: 'द्वितीय भाव (धन/वाणी)', nameHinglish: '2nd House (Dhana)', phalaHin: 'धन संचय, वाणी प्रभाव, कुटुंब सुख व आर्थिक मामलों में महत्वपूर्ण लाभ', phalaHinglish: 'Wealth accumulation, family harmony, speech power aur financial gains' },
+        3: { nameHin: 'तृतीय भाव (सहज/पराक्रम)', nameHinglish: '3rd House (Parakrama)', phalaHin: 'साहस, गूढ़ शोध, पराक्रम व संचार में सफलता। भाई-बहनों से समझदारी रखें', phalaHinglish: 'Courage, deep research aur communication me success. Siblings ke sath harmony rakhein' },
+        4: { nameHin: 'चतुर्थ भाव (सुख/मातृ)', nameHinglish: '4th House (Sukha)', phalaHin: 'गृह-सुख, वाहन, माता का सानिध्य व मानसिक शांति में विशेष प्रभाव', phalaHinglish: 'Home comfort, vehicle, mother ka support aur peace of mind' },
+        5: { nameHin: 'पंचम भाव (सुत/बुद्धि)', nameHinglish: '5th House (Buddhi)', phalaHin: 'बौद्धिक निर्णय, संतान सुख, उच्च विद्या, मंत्र सिद्धि व आकस्मिक लाभ', phalaHinglish: 'Sharp intellect, exams/education me success, creative gains aur child happiness' },
+        6: { nameHin: 'षष्ठ भाव (रिपु/रोग)', nameHinglish: '6th House (Shatru)', phalaHin: 'प्रतियोगिता व शत्रुओं पर विजय, रोग मुक्ति व कर्मठता। विवादों से बचें', phalaHinglish: 'Competition aur rivals par victory, health recovery. Unnecessary arguments se bachein' },
+        7: { nameHin: 'सप्तम भाव (जाया/व्यापार)', nameHinglish: '7th House (Jaya)', phalaHin: 'साझेदारी, व्यापारिक विस्तार, जनसंपर्क व दांपत्य जीवन पर गहरा प्रभाव', phalaHinglish: 'Business partnerships, spouse connection aur public relations me high impact' },
+        8: { nameHin: 'अष्टम भाव (आयु/गूढ़)', nameHinglish: '8th House (Ayur/Randhra)', phalaHin: 'गूढ़ विद्या, शोध, गुप्त ज्ञान, आकस्मिक धन व पैतृक संपत्ति लाभ', phalaHinglish: 'Occult wisdom, deep research, sudden transformation aur unexpected gains' },
+        9: { nameHin: 'नवम भाव (भाग्य/धर्म)', nameHinglish: '9th House (Bhagya)', phalaHin: 'भाग्योदय, धार्मिक यात्रा, उच्च दर्शन, पिता व गुरुजनों का आशीर्वाद', phalaHinglish: 'Good fortune, spiritual travel, higher wisdom, father & guru blessings' },
+        10: { nameHin: 'दशम भाव (कर्म/आजीविका)', nameHinglish: '10th House (Karma)', phalaHin: 'करियर उत्थान, पद-प्रतिष्ठा, प्रशासनिक अधिकार व कार्यक्षेत्र में उन्नति', phalaHinglish: 'Career growth, promotion, leadership authority aur public recognition' },
+        11: { nameHin: 'एकादश भाव (आय/लाभ)', nameHinglish: '11th House (Labha)', phalaHin: 'सर्व कार्य सिद्धि, बड़े आर्थिक लाभ, महत्वाकांक्षा पूर्ति व मित्रों का सहयोग', phalaHinglish: 'Big financial gains, goals achievement aur powerful friends ka support' },
+        12: { nameHin: 'द्वादश भाव (व्यय/मोक्ष)', nameHinglish: '12th House (Vyaya)', phalaHin: 'व्यय नियंत्रण, विदेश यात्रा, एकांत साधना, दान-पुण्य व आध्यात्मिक शांति', phalaHinglish: 'Expenses control, foreign connections, meditation aur spiritual peace' }
     };
 
     // Master list of historical and upcoming pivotal transit events (2026–2028)
@@ -618,7 +618,7 @@
         // ==========================================
 
         /**
-         * Computes concise, actionable predictive outcome (फल) for any conjunction,
+         * Computes concise, actionable predictive outcome (फल) for any conjunction in Hinglish,
          * taking into account personal natal house activation and planetary natures.
          */
         getConjunctionOutcomeSummary(conj, profile) {
@@ -629,23 +629,23 @@
 
             // When user profile is set and house is known
             if (house) {
-                const hData = HOUSE_OUTCOMES[house] || { nameHin: `${house}वां भाव`, phalaHin: `${house}वें भाव का प्रभाव` };
+                const hData = HOUSE_OUTCOMES[house] || { phalaHinglish: `House ${house} activations` };
 
                 // 1. Jupiter + Ketu (Ganesha / Kaivalya Yoga)
                 if ((p1 === 'jupiter' && p2 === 'ketu') || (p1 === 'ketu' && p2 === 'jupiter')) {
                     const specific = {
-                        1: 'आत्म-ज्ञान, गहन अंतर्ज्ञान व आध्यात्मिक आभा में वृद्धि। सात्विक विचार रखें।',
-                        2: 'सत्य वाणी, पैतृक संस्कार, सात्विक खानपान व अप्रत्याशित वित्तीय समझ।',
-                        3: 'गूढ़ शोध, पराक्रम व आध्यात्मिक ज्ञान में वृद्धि। भाई-बहनों से समझदारी रखें।',
-                        4: 'आंतरिक शांति, मातृ आशीर्वाद व एकांत ध्यान में सुख। गृह क्लेश से बचें।',
-                        5: 'तीक्ष्ण प्रज्ञा, मंत्र साधना, गूढ़ विद्या में सिद्धि व संतान से शुभ संवाद।',
-                        6: 'गूढ़ साधना से शत्रु शमन, रोग प्रतिरोधक क्षमता व सेवा भाव में वृद्धि।',
-                        7: 'दांपत्य जीवन में आध्यात्मिक सामंजस्य रखें। सांसारिक अपेक्षाओं में धैर्य।',
-                        8: 'गुप्त ज्ञान, ज्योतिष, शोध व पूर्व जन्म पुण्य की आकस्मिक जागृति।',
-                        9: 'तीर्थाटन, धर्म-दर्शन, गुरु कृपा व आध्यात्मिक भाग्योदय का समय।',
-                        10: 'परामर्श, शिक्षा व नीतिगत निर्णयों में मान-सम्मान। निष्काम कर्म से लाभ।',
-                        11: 'महत्वाकांक्षाओं का आध्यात्मिक समाधान, ज्ञानी मित्रों का संग व अप्रत्याशित लाभ।',
-                        12: 'मोक्ष जिज्ञासा, एकांत ध्यान साधना, दान-पुण्य व आंतरिक शांति का विस्तार।'
+                        1: 'Spiritual clarity, deep intuition aur personality me wisdom ka glow. Positive & satvik mindset rakhein.',
+                        2: 'Truthful speech, financial wisdom aur ancestral sanskaron se labh. Thoughtful investment karein.',
+                        3: 'Deep research, courage aur spiritual wisdom me growth. Siblings ke sath harmony banaye rakhein.',
+                        4: 'Mental peace, home tranquility aur mother ka blessings. Household arguments avoid karein.',
+                        5: 'Sharp intellect, intuitive problem-solving aur higher learning me huge breakthroughs.',
+                        6: 'Spiritual discipline se obstacles aur rivals par triumph. Daily health habits clean rakhein.',
+                        7: 'Relationships me spiritual patience rakhein. Worldly expectations me calm approach beneficial.',
+                        8: 'Occult science, astrology, research aur unexpected intuitive realizations.',
+                        9: 'Divine luck, higher philosophy, spiritual journey aur mentors ka strong guidance.',
+                        10: 'Advisory roles, ethical decisions aur career respect me enhancement.',
+                        11: 'Spiritual friends ka network, positive desires fulfillment aur divine support.',
+                        12: 'Meditation, inner detachment, charity aur supreme spiritual peace.'
                     };
                     if (specific[house]) return specific[house];
                 }
@@ -653,18 +653,18 @@
                 // 2. Sun + Mercury (Budhaditya Yoga)
                 if ((p1 === 'sun' && p2 === 'mercury') || (p1 === 'mercury' && p2 === 'sun')) {
                     const specific = {
-                        1: 'प्रखर व्यक्तित्व, त्वरित बौद्धिक निर्णय व मान-सम्मान में वृद्धि।',
-                        2: 'प्रभावशाली वाणी, वाणिज्यिक लाभ, वित्तीय योजना व कुटुंब सम्मान।',
-                        3: 'तीक्ष्ण लेखन, तार्किक पराक्रम व संचार/मीडिया क्षेत्र में विशेष सफलता।',
-                        4: 'बौद्धिक शांति, माता का सहयोग व वाहन/संपत्ति के सुविचारित निर्णय।',
-                        5: 'अभूतपूर्व परीक्षा सफलता, तीक्ष्ण बुद्धि, शेयर/व्यापार व रचनात्मक लाभ।',
-                        6: 'वाद-विवाद व प्रतियोगी परीक्षाओं में विजय, तार्किक कौशल से शत्रु परास्त।',
-                        7: 'व्यापारिक अनुबंधों में लाभ, साझेदारी में पारदर्शिता व सामाजिक प्रतिष्ठा।',
-                        8: 'शोध, डेटा विश्लेषण व पैतृक वित्तीय दस्तावेजों में अनुकूलता।',
-                        9: 'उच्च शिक्षा में सफलता, पिता व गुरु का मार्गदर्शन व भाग्योदय।',
-                        10: 'उच्च पद-प्रतिष्ठा, प्रशासनिक अधिकार, पदोन्नति व सरकारी कार्यों में सिद्धि।',
-                        11: 'व्यापारिक विस्तार, नए आय स्रोत, बड़े अधिकारियों से लाभ व मित्र सहयोग।',
-                        12: 'विदेश व्यापार में सफलता, बौद्धिक अनुसंधान व अनियोजित खर्चों पर रोक।'
+                        1: 'Sharp executive persona, quick decision-making aur high social respect.',
+                        2: 'Persuasive communication, commercial profits aur solid financial planning.',
+                        3: 'Brilliant logic, writing aur media/communication me remarkable success.',
+                        4: 'Clear mental clarity, real-estate decisions aur mother ka strong support.',
+                        5: 'Outstanding academic success, sharp analytics, trading aur creative gains.',
+                        6: 'Debates aur competitive tests me victory. Sharp reasoning se rivals defeat.',
+                        7: 'Lucrative business deals, partnership transparency aur public fame.',
+                        8: 'Deep data research, analytics aur ancestral documents resolution.',
+                        9: 'Higher studies me triumph, father & mentor guidance aur strong luck.',
+                        10: 'High career promotion, administrative authority aur government work victory.',
+                        11: 'Commercial expansion, new income sources aur influential network support.',
+                        12: 'Foreign business avenues open, research success aur budget prudence.'
                     };
                     if (specific[house]) return specific[house];
                 }
@@ -672,77 +672,79 @@
                 // 3. Mercury + Venus (Lakshmi-Narayana Yoga)
                 if ((p1 === 'mercury' && p2 === 'venus') || (p1 === 'venus' && p2 === 'mercury')) {
                     const specific = {
-                        1: 'आकर्षक व्यक्तित्व, कलात्मक रुचि, मधुर वाणी व सामाजिक लोकप्रियता।',
-                        2: 'आकस्मिक धन लाभ, विलासिता वृद्धि, आभूषण/वस्त्र व मधुर वाणी से लाभ।',
-                        3: 'डिजिटल मीडिया, संगीत/कला व रचनात्मक संचार में अप्रत्याशित प्रसिद्धि।',
-                        4: 'सुंदर वाहन सुख, गृह सज्जा, पारिवारिक सौहार्द व मानसिक आनंद।',
-                        5: 'प्रेम संबंधों में मधुरता, रचनात्मक सफलता, संतान सुख व मनोरंजन लाभ।',
-                        6: 'कूटनीति से विरोधियों का शमन, कला-कौशल से रोजगार में तरक्की।',
-                        7: 'दांपत्य जीवन में प्रेम व मिठास, व्यापारिक साझेदारी में उत्तम लाभ।',
-                        8: 'गूढ़ कला व गुप्त धन लाभ, पैतृक संपदा में कानूनी सुगमता।',
-                        9: 'सांस्कृतिक यात्राएं, कलात्मक धर्म कार्य व सौभाग्य में वृद्धि।',
-                        10: 'फैशन, डिजाइन, मीडिया व वाणिज्यिक क्षेत्र में भारी सफलता।',
-                        11: 'व्यापार से प्रचुर धन लाभ, कलात्मक मित्रों का साथ व इच्छापूर्ति।',
-                        12: 'विलासिता व यात्राओं पर व्यय, विदेशी संपर्कों से लाभ व शयन सुख।'
+                        1: 'Charming persona, artistic flair, sweet speech aur widespread popularity.',
+                        2: 'Sudden financial gains, luxury accumulation aur speech se attractive deals.',
+                        3: 'Digital media, music/arts aur creative writing me sudden fame.',
+                        4: 'Comfortable vehicles, home aesthetics, family warmth aur joy.',
+                        5: 'Romantic delight, artistic creativity, creative speculation aur happiness.',
+                        6: 'Diplomatic skills se adversaries overcome, creative freelance jobs.',
+                        7: 'Sweet marital harmony, affectionate bonding aur high business gains.',
+                        8: 'Hidden artistic discoveries, legacy funds aur sudden prosperity.',
+                        9: 'Cultural travels, artistic philanthropy aur fortune enhancement.',
+                        10: 'Design, fashion, media aur commercial domains me massive career peak.',
+                        11: 'Large financial inflow, artistic friends network aur desires fulfill.',
+                        12: 'Joyful travels, artistic investments aur relaxing foreign opportunities.'
                     };
                     if (specific[house]) return specific[house];
                 }
 
                 // 4. Mars + Rahu (Angarak Yoga)
                 if ((p1 === 'mars' && p2 === 'rahu') || (p1 === 'rahu' && p2 === 'mars')) {
-                    return `अंगारक प्रभाव: ${hData.phalaHin}। उग्रता, जल्दबाजी व क्रोध से बचें। वाहन में संयम रखें।`;
+                    return `Angarak impact: ${hData.phalaHinglish || hData.phalaHin}. Impulsive anger aur speed driving avoid karein.`;
                 }
 
                 // 5. Mars + Saturn (Yama-Mangal)
                 if ((p1 === 'mars' && p2 === 'saturn') || (p1 === 'saturn' && p2 === 'mars')) {
-                    return `यम-मंगल प्रभाव: ${hData.phalaHin}। कठिन परिश्रम से सफलता, चोट व विवाद से सावधान रहें।`;
+                    return `Yama-Mangal impact: ${hData.phalaHinglish || hData.phalaHin}. Disciplined hard work se success, conflicts avoid karein.`;
                 }
 
                 // 6. Moon + Saturn (Visha Yoga)
                 if ((p1 === 'moon' && p2 === 'saturn') || (p1 === 'saturn' && p2 === 'moon')) {
-                    return `विष योग प्रभाव: ${hData.phalaHin}। मानसिक शांति हेतु ध्यान व शिव आराधना करें। कार्यों में धैर्य रखें।`;
+                    return `Visha yoga: ${hData.phalaHinglish || hData.phalaHin}. Meditation aur calm patience se clarity maintain karein.`;
                 }
 
                 // 7. Jupiter + Rahu (Guru Chandal)
                 if ((p1 === 'jupiter' && p2 === 'rahu') || (p1 === 'rahu' && p2 === 'jupiter')) {
-                    return `गुरु चांडाल प्रभाव: ${hData.phalaHin}। अपरंपरागत विचारों में सतर्कता, नैतिक आचरण बनाए रखें।`;
+                    return `Guru Chandal: ${hData.phalaHinglish || hData.phalaHin}. Unconventional ideas me ethics aur care banaye rakhein.`;
                 }
 
                 // Fallback for known or other pairs
                 if (known) {
-                    const themePart = known.themeHin.split('।')[0].trim();
-                    return `${hData.phalaHin}। (${themePart})`;
+                    const themePart = (known.themeHinglish || known.themeEng || known.themeHin).split('.')[0].trim();
+                    return `${hData.phalaHinglish || hData.phalaHin}. (${themePart})`;
                 }
-                return `${hData.phalaHin}। ${conj.meta1.hin}-${conj.meta2.hin} की ऊर्जा सक्रिय।`;
+                return `${hData.phalaHinglish || hData.phalaHin}. ${conj.meta1.name}-${conj.meta2.name} active energy.`;
             }
 
             // General sky transit (No profile attached)
             if (known) {
-                return known.themeHin;
+                return known.themeHinglish || known.themeEng || known.themeHin;
             }
-            return `${conj.meta1.hin} और ${conj.meta2.hin} की संयुक्त ऊर्जा सक्रिय है।`;
+            return `${conj.meta1.name} aur ${conj.meta2.name} ki combined energy active hai.`;
         }
 
         /**
-         * Formats complete notification title and outcome-rich body for push alerts
+         * Formats complete notification title and outcome-rich body for push alerts in Hinglish
          */
         generateConjunctionNotificationData(conj, profile) {
             const orb = conj.orbStr;
-            const p1Hin = conj.meta1.hin;
-            const p2Hin = conj.meta2.hin;
-            const rashiHin = conj.rashiHin;
-            const yogaName = conj.known ? conj.known.nameHin : `${p1Hin}-${p2Hin} युति`;
+            const p1 = conj.meta1.title || conj.meta1.name;
+            const p2 = conj.meta2.title || conj.meta2.name;
+            const rashiEng = conj.rashiEng;
+            const yogaName = conj.known
+                ? (conj.known.nameHinglish || conj.known.nameEng)
+                : `${p1}-${p2} Alignment`;
             const outcome = this.getConjunctionOutcomeSummary(conj, profile);
 
             const title = `🔥 ${yogaName} (Orb: ${orb})`;
             let body = '';
 
             if (profile && conj.houseLagna) {
-                const userName = profile.name || 'साधक';
+                const userName = profile.name || 'Seeker';
                 const houseNum = conj.houseLagna;
-                body = `${userName} जी (${houseNum}वें भाव में): 🎯 फल: ${outcome}`;
+                body = `${userName} ji (${houseNum}th House me): 🎯 Outcome: ${outcome}`;
             } else {
-                body = `${rashiHin} राशि में ${p1Hin}-${p2Hin} तीव्र युति (<6°)! 🎯 फल: ${outcome}`;
+                body = `${p1}-${p2} close yuti in ${rashiEng} (<6°)! 🎯 Outcome: ${outcome}`;
             }
 
             return { title, body };
@@ -1264,19 +1266,19 @@
                     transitId: activeConjunction.id
                 });
             } else {
-                // Send Ingress alert with explicit outcome!
+                // Send Ingress alert with explicit outcome in Hinglish!
                 const testEvent = TRANSIT_EVENTS_DB[1]; // Jupiter to Leo
                 const insight = this.getPersonalizedTransitInsight(testEvent, profile);
 
-                let ingressBody = insight.shortSignificanceHin;
+                let ingressBody = '';
                 if (profile && insight.hasProfile) {
-                    ingressBody = `${insight.userName} जी (${insight.houseFromLagna}वें भाव में): 🎯 फल: ${insight.shortSignificanceHin}`;
+                    ingressBody = `${insight.userName} ji (${insight.houseFromLagna}th House me): 🎯 Outcome: Guru dev Simha rashi me enter kar rahe hain. Creative intelligence, education aur luck me big boost!`;
                 } else {
-                    ingressBody = `🎯 फल: ${insight.shortSignificanceHin}`;
+                    ingressBody = `🎯 Outcome: Guru Simha rashi me gochar kar rahe hain. Leadership authority aur higher wisdom me growth.`;
                 }
 
                 this.sendNativePushAlert({
-                    title: `${insight.grahaMeta.emoji} ${testEvent.titleHin || testEvent.titleEng}`,
+                    title: `🟡 Jupiter Ingress into Leo (Guru Simha Gochar)`,
                     body: ingressBody,
                     transitId: testEvent.id
                 });

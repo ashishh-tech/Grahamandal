@@ -45,6 +45,7 @@ flowchart TD
         B5 & C3 --> D4["Navagraha Telemetry Cards (graha-tracker.js)"]
         C4 & C5 & C6 --> D5["Personal Transit Insights Panel"]
         B5 --> D6["5-Year Planetary Ephemeris Matrix (transit-calendar.js)"]
+        C3 --> D7["Transit Web Push Notifications & Ingress Modal (transit-notifications.js)"]
     end
 
     GeoLayer --> AstroEngine
@@ -140,6 +141,7 @@ Grahamandal/
     ├── astrology-engine-v8.js   # Core ephemeris, Julian Date, Ayanamsa & astronomical math
     ├── chart-renderer.js        # Dynamic SVG vector generator (North & South Indian charts)
     ├── personal-transit.js      # OpenStreetMap geocoding, GPS locator, & Sade Sati logic
+    ├── transit-notifications.js # Real-time Web Notifications, Short Significance, & Ingress Modal
     ├── graha-tracker.js         # Telemetry dashboard, real-time clock, & Graha card bindings
     ├── transit-engine.js        # Real-time transit comparison against natal profiles
     ├── transit-calendar.js      # Multi-year transit chronology and filtering engine

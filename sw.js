@@ -1,11 +1,12 @@
 /**
- * Graha Tracker Service Worker v2.3.0
+ * Graha Tracker Service Worker v2.4.0
  * - CRITICAL: Navigation requests (HTML page loads) are NOT intercepted.
  *   This avoids Cloudflare Pages 308 redirect ERR_FAILED issues.
  * - Static assets (CSS, JS, Fonts, Images): Stale-while-revalidate caching.
+ * - Handles notification clicks to bring up the app and trigger personal transit modals.
  */
 
-const CACHE_NAME = 'graha-tracker-v2.3.0';
+const CACHE_NAME = 'graha-tracker-v2.4.0';
 
 const CORE_ASSETS = [
     './styles.css',
@@ -14,10 +15,11 @@ const CORE_ASSETS = [
     './logo.svg',
     './favicon.svg',
     './favicon.png',
-     './manifest.json',
+    './manifest.json',
     './js/astrology-engine-v8.js',
     './js/chart-renderer.js',
     './js/personal-transit.js',
+    './js/transit-notifications.js',
     './js/graha-tracker.js',
     './js/transit-calendar.js'
 ];
@@ -76,6 +78,27 @@ self.addEventListener('fetch', event => {
             }).catch(() =>
                 new Response('', { status: 204, statusText: 'No Content' })
             );
+        })
+    );
+});
+
+// CRITICAL: Handle notification click to bring app into focus and open transit modal
+self.addEventListener('notificationclick', event => {
+    event.notification.close();
+    const transitId = (event.notification.data && event.notification.data.transitId) || '';
+    const targetUrl = transitId ? `./index.html?transit=${encodeURIComponent(transitId)}` : './index.html';
+
+    event.waitUntil(
+        self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+            for (const client of clientList) {
+                if (client.url.includes('index.html') && 'focus' in client) {
+                    client.postMessage({ type: 'OPEN_TRANSIT_MODAL', transitId: transitId });
+                    return client.focus();
+                }
+            }
+            if (self.clients.openWindow) {
+                return self.clients.openWindow(targetUrl);
+            }
         })
     );
 });

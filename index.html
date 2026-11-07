@@ -139,6 +139,11 @@
         </div>
       </a>
       <div class="flex items-center gap-1.5 shrink-0">
+        <!-- Real-Time Transit Notification Bell -->
+        <button id="transit-alert-bell-btn" class="relative w-8 h-8 flex items-center justify-center rounded-full text-cosmic-slate hover:bg-parchment-container active:scale-95 transition-all" type="button" title="Transit Alerts & Notifications (गोचर सूचनाएं)">
+          <span class="material-symbols-outlined text-[19px]">notifications</span>
+          <span id="alert-badge-count" class="absolute -top-0.5 -right-0.5 min-w-[15px] h-[15px] px-1 rounded-full bg-retrograde-ruby text-white text-[9px] font-bold flex items-center justify-center shadow-sm">2</span>
+        </button>
         <div class="flex items-center p-0.5 rounded-full bg-parchment-container shadow-[inset_0_1px_2px_rgba(35,35,62,0.08)]">
           <button id="lang-eng-btn" class="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary-container text-on-primary shadow-sm" type="button">ENG</button>
           <button id="lang-hin-btn" class="px-2 py-0.5 rounded-full text-xs font-medium text-muted-lavender hover:text-cosmic-slate" type="button">हिंदी</button>
@@ -497,6 +502,189 @@
     </div>
   </main>
 
+  <!-- ============================================== -->
+  <!-- TRANSIT ALERTS & NOTIFICATION CENTER DRAWER    -->
+  <!-- ============================================== -->
+  <div id="transit-alerts-drawer" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="alerts-drawer-title" role="dialog" aria-modal="true">
+    <!-- Backdrop overlay -->
+    <div class="fixed inset-0 bg-cosmic-slate/50 backdrop-blur-sm transition-opacity" id="close-alerts-drawer-btn"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-surface border-l border-[rgba(197,152,32,0.25)] shadow-2xl flex flex-col justify-between overflow-hidden">
+        
+        <!-- Drawer Header -->
+        <div class="p-4 bg-surface-container-lowest border-b border-[rgba(197,152,32,0.18)] flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20">
+              <span class="material-symbols-outlined text-[19px]">notifications_active</span>
+            </span>
+            <div>
+              <h2 class="font-headline-sm text-sm sm:text-base font-bold text-cosmic-slate leading-tight" id="alerts-drawer-title">Transit Alerts (गोचर सूचनाएं)</h2>
+              <span class="text-[11px] text-muted-lavender block">Real-time planetary ingresses &amp; personalized significance</span>
+            </div>
+          </div>
+          <button type="button" onclick="document.getElementById('transit-alerts-drawer').classList.add('hidden')" class="w-8 h-8 flex items-center justify-center rounded-full text-muted-lavender hover:text-cosmic-slate hover:bg-parchment-container transition-colors">
+            <span class="material-symbols-outlined text-[20px]">close</span>
+          </button>
+        </div>
+
+        <!-- Drawer Body (Scrollable) -->
+        <div class="flex-1 overflow-y-auto p-3.5 space-y-3.5">
+          <!-- Notification Push Control Card -->
+          <div class="flex flex-col bg-surface-container-lowest p-3 rounded-xl border border-[rgba(197,152,32,0.2)] shadow-sm space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-cosmic-slate block">Browser Push Notifications</span>
+                <span class="text-[10px] text-muted-lavender" id="push-notif-status-badge">Disabled</span>
+              </div>
+              <button type="button" id="btn-toggle-push-notif" class="px-3 py-1 rounded-full text-xs font-semibold bg-surface-container-high hover:bg-primary-container/20 text-cosmic-slate border border-black/10 flex items-center gap-1.5 transition-all">
+                <span class="material-symbols-outlined text-[14px]" id="push-notif-toggle-icon">notifications_off</span>
+                <span id="push-notif-toggle-label">Enable Alerts (चालू करें)</span>
+              </button>
+            </div>
+            
+            <p class="text-[11px] text-on-surface-variant leading-relaxed">
+              Receive alerts the exact moment any planet ingresses into a new Rashi or Nakshatra, featuring short predictions customized to your saved birth chart.
+            </p>
+
+            <div class="pt-1 border-t border-black/5 flex items-center justify-between">
+              <button type="button" id="btn-send-test-notification" class="px-3 py-1 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary text-xs font-bold shadow-sm hover:shadow active:scale-95 transition-all flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">bolt</span>
+                <span>Send Test Notification (लाइव टेस्ट)</span>
+              </button>
+              <span class="text-[10px] text-muted-lavender">Instant Check</span>
+            </div>
+          </div>
+
+          <!-- Alert Items Section Header -->
+          <div class="flex items-center justify-between pt-1">
+            <span class="text-xs font-bold text-cosmic-slate flex items-center gap-1">
+              <span class="material-symbols-outlined text-primary text-[15px]">timelapse</span>
+              <span>Pivotal Planetary Transits (मुख्य गोचर)</span>
+            </span>
+            <span class="text-[10px] text-primary font-semibold">Real-Time Ephemeris</span>
+          </div>
+
+          <!-- Dynamic Alerts List Container -->
+          <div class="flex flex-col space-y-2.5" id="alerts-events-list">
+            <!-- Dynamically populated by transit-notifications.js -->
+          </div>
+        </div>
+
+        <!-- Drawer Footer -->
+        <div class="p-3 bg-surface-container-lowest border-t border-black/5 flex items-center justify-between text-xs text-muted-lavender">
+          <span>True Chitra Paksha Lahiri Ephemeris</span>
+          <a href="transit-calendar.html" class="text-primary font-bold hover:underline flex items-center gap-0.5">
+            <span>5-Yr Calendar</span>
+            <span class="material-symbols-outlined text-[13px]">arrow_forward</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- DETAILED PERSONALIZED TRANSIT INGRESS MODAL     -->
+  <!-- ============================================== -->
+  <div id="transit-detail-modal-backdrop" class="fixed inset-0 z-50 bg-cosmic-slate/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div id="transit-detail-modal" class="relative w-full max-w-lg bg-surface rounded-2xl border border-[rgba(197,152,32,0.3)] shadow-[0_12px_40px_rgba(0,0,0,0.2)] overflow-hidden my-auto hidden">
+      
+      <!-- Modal Top Atmospheric Glow & Header -->
+      <div class="p-4 sm:p-5 bg-gradient-to-r from-parchment-container via-surface-container-lowest to-parchment-container border-b border-[rgba(197,152,32,0.18)] relative">
+        <button type="button" id="close-transit-detail-modal-btn" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-cosmic-slate flex items-center justify-center transition-colors">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+
+        <div class="flex items-start gap-3 pr-6">
+          <span id="modal-transit-emblem" class="w-12 h-12 rounded-2xl bg-primary-container text-on-primary flex items-center justify-center text-2xl shrink-0 shadow-md border border-white/40">
+            🪐
+          </span>
+          <div class="flex flex-col min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="px-2 py-0.5 rounded-full text-[10px] bg-secondary/15 text-secondary font-bold uppercase tracking-wider">Live Transit Alert</span>
+              <span id="modal-transit-date" class="text-xs text-muted-lavender font-semibold">--</span>
+            </div>
+            <h3 class="font-headline-sm text-base sm:text-lg font-bold text-cosmic-slate leading-tight mt-0.5" id="modal-transit-title">
+              Planetary Transit Ingress
+            </h3>
+            <span class="text-xs text-muted-lavender truncate mt-0.5" id="modal-transit-subtitle">
+              Detailed Astrological Significance
+            </span>
+          </div>
+        </div>
+
+        <!-- Badges Bar -->
+        <div class="flex items-center gap-1.5 flex-wrap pt-2.5 mt-2 border-t border-black/5" id="modal-transit-badges-container">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+
+      <!-- Modal Body (Content) -->
+      <div class="p-4 sm:p-5 space-y-3.5 max-h-[70vh] overflow-y-auto">
+        <!-- Native Profile Status Notice Banner -->
+        <div id="modal-profile-status-notice">
+          <!-- Dynamic notice -->
+        </div>
+
+        <!-- 1. Career & Profession Impact -->
+        <div class="flex flex-col bg-surface-container-lowest p-3 rounded-xl border border-black/5 shadow-sm space-y-1">
+          <div class="flex items-center gap-1.5 text-xs font-bold text-cosmic-slate">
+            <span class="material-symbols-outlined text-primary text-[16px]">work</span>
+            <span>Career, Profession &amp; Public Status (कर्म व आजीविका)</span>
+          </div>
+          <p class="text-xs text-on-surface-variant leading-relaxed" id="modal-transit-career">
+            --
+          </p>
+        </div>
+
+        <!-- 2. Wealth & Finances Impact -->
+        <div class="flex flex-col bg-surface-container-lowest p-3 rounded-xl border border-black/5 shadow-sm space-y-1">
+          <div class="flex items-center gap-1.5 text-xs font-bold text-cosmic-slate">
+            <span class="material-symbols-outlined text-secondary text-[16px]">payments</span>
+            <span>Wealth, Finance &amp; Family Assets (धन व संपत्ति)</span>
+          </div>
+          <p class="text-xs text-on-surface-variant leading-relaxed" id="modal-transit-wealth">
+            --
+          </p>
+        </div>
+
+        <!-- 3. Health & Emotional Well-being -->
+        <div class="flex flex-col bg-surface-container-lowest p-3 rounded-xl border border-black/5 shadow-sm space-y-1">
+          <div class="flex items-center gap-1.5 text-xs font-bold text-cosmic-slate">
+            <span class="material-symbols-outlined text-tertiary text-[16px]">health_and_safety</span>
+            <span>Health, Vitality &amp; Emotional State (स्वास्थ्य व मन)</span>
+          </div>
+          <p class="text-xs text-on-surface-variant leading-relaxed" id="modal-transit-health">
+            --
+          </p>
+        </div>
+
+        <!-- 4. Vedic Remedies (शास्त्रोक्त उपाय) -->
+        <div class="flex flex-col bg-primary-container/10 p-3 rounded-xl border border-primary/20 space-y-1.5">
+          <div class="flex items-center gap-1.5 text-xs font-bold text-primary">
+            <span class="material-symbols-outlined text-[16px]">verified</span>
+            <span>Brihat Parashara Vedic Remedies (शास्त्रोक्त उपाय व सावधानियां)</span>
+          </div>
+          <p class="text-xs text-cosmic-slate font-medium leading-relaxed" id="modal-transit-remedies">
+            --
+          </p>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-3 sm:p-4 bg-surface-container-lowest border-t border-black/5 flex items-center justify-between gap-2">
+        <button type="button" id="share-transit-whatsapp-btn" class="px-3.5 py-1.5 rounded-full bg-[#25D366]/15 hover:bg-[#25D366]/25 text-[#128C7E] text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95">
+          <span class="material-symbols-outlined text-[15px]">share</span>
+          <span>WhatsApp Share</span>
+        </button>
+        <button type="button" onclick="document.getElementById('transit-detail-modal').classList.add('hidden'); document.getElementById('transit-detail-modal-backdrop').classList.add('hidden');" class="px-4 py-1.5 rounded-full bg-primary-container text-on-primary text-xs font-bold shadow-sm active:scale-95 transition-all">
+          Done (पूर्ण)
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Mobile Bottom Floating Navigation -->
   <nav class="fixed bottom-0 w-full z-50 pb-safe px-3 pb-3 pointer-events-none" data-graha-nav="custom">
     <div class="mx-auto max-w-sm h-14 rounded-full bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_8px_24px_rgba(35,35,62,0.12)] border border-[rgba(197,152,32,0.25)] px-2 flex items-center justify-around pointer-events-auto">
@@ -523,6 +711,7 @@
   <script src="js/astrology-engine-v8.js"></script>
   <script src="js/chart-renderer.js"></script>
   <script src="js/personal-transit.js"></script>
+  <script src="js/transit-notifications.js"></script>
   <script src="js/graha-tracker.js"></script>
   <script src="mobile-nav.js"></script>
 </body>

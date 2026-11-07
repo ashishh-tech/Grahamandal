@@ -6,7 +6,7 @@
  * - Handles notification clicks to bring up the app and trigger personal transit modals.
  */
 
-const CACHE_NAME = 'graha-tracker-v2.4.1';
+const CACHE_NAME = 'graha-tracker-v2.4.2';
 
 const CORE_ASSETS = [
     './styles.css',

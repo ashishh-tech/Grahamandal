@@ -18,6 +18,12 @@
 (function (window) {
     'use strict';
 
+    const getOrdinal = (n) => {
+        const s = ['th', 'st', 'nd', 'rd'];
+        const v = n % 100;
+        return n + (s[(v - 20) % 10] || s[v] || s[0]);
+    };
+
     const RASHIS_ENG = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
     const RASHIS_HIN = ['मेष', 'वृषभ', 'मिथुन', 'कर्क', 'सिंह', 'कन्या', 'तुला', 'वृश्चिक', 'धनु', 'मकर', 'कुंभ', 'मीन'];
 
@@ -688,7 +694,64 @@
                     if (specific[house]) return specific[house];
                 }
 
-                // 4. Mars + Rahu (Angarak Yoga)
+                // 4. Moon + Jupiter (Gajakesari Yoga — ~2.25 day transit cycle)
+                if ((p1 === 'moon' && p2 === 'jupiter') || (p1 === 'jupiter' && p2 === 'moon')) {
+                    const specific = {
+                        1: 'High dignity, mental clarity aur charismatic wisdom. Crucial decisions me supreme success.',
+                        2: 'Family prosperity, speech me authoritative sweetness aur solid financial growth.',
+                        3: 'Courageous mindset, communications & writing me brilliance aur siblings ka full support.',
+                        4: 'Domestic peace, emotional happiness, vehicle/property blessings aur mother ka loving support.',
+                        5: 'Extraordinary intellect, creative spark, academic honors aur child happiness.',
+                        6: 'Wisdom se competitors par triumph, health recovery aur daily discipline me growth.',
+                        7: 'Marital understanding, noble partner connection aur public business partnerships me success.',
+                        8: 'Occult research, intuitive insights aur unexpected legacy/ancestral gains.',
+                        9: 'Supreme fortune, spiritual elevation, pilgrimage aur teachers & mentors ka divine blessings.',
+                        10: 'Major career rise, leadership authority, public respect aur executive success.',
+                        11: 'Large financial gains, influential network expansion aur heartfelt aspirations fulfillment.',
+                        12: 'Spiritual detachment, charitable acts, mental tranquility aur overseas avenues.'
+                    };
+                    if (specific[house]) return specific[house];
+                }
+
+                // 5. Moon + Mars (Chandra-Mangal / Mahalakshmi Yoga)
+                if ((p1 === 'moon' && p2 === 'mars') || (p1 === 'mars' && p2 === 'moon')) {
+                    const specific = {
+                        1: 'Energetic confidence, bold initiative aur charismatic drive. Impulsive anger se bachein.',
+                        2: 'Tremendous wealth acquisition, property matters me profit aur bold financial decisions.',
+                        3: 'High courage, media/tech initiatives aur competitive ventures me complete victory.',
+                        4: 'Real estate, land/vehicles me gains. Home environment me patience maintain karein.',
+                        5: 'Sharp entrepreneurial ideas, dynamic speculation gains aur proactive focus.',
+                        6: 'Rivals par absolute victory, loans/debts clearing aur robust physical stamina.',
+                        7: 'High-drive business partnerships, dynamic commerce. Relationship me calm approach rakhein.',
+                        8: 'Sudden financial windfalls, insurance/property resolution aur deep technical focus.',
+                        9: 'Bold ideological decisions, long-distance trade aur father/mentors ke sath proactive growth.',
+                        10: 'High corporate ambition, executive leadership, property/industrial projects me huge success.',
+                        11: 'Massive income flow, property/business expansion aur ambitious desires fulfillment.',
+                        12: 'High energy in foreign investments. Excessive spending aur rush driving se bachein.'
+                    };
+                    if (specific[house]) return specific[house];
+                }
+
+                // 6. Moon + Saturn (Visha / Punaphoo Yoga)
+                if ((p1 === 'moon' && p2 === 'saturn') || (p1 === 'saturn' && p2 === 'moon')) {
+                    const specific = {
+                        1: 'Introspective mood, emotional seriousness. Overthinking avoid karein aur meditation karein.',
+                        2: 'Financial discipline, careful budget planning aur family discussions me calm tone rakhein.',
+                        3: 'Slow but solid communication, technical writing aur persistent effort se success.',
+                        4: 'Domestic responsibilities me patience rakhein, mother ki care karein, cold food avoid karein.',
+                        5: 'Deep analytical focus, creative research. Speculative bets avoid karein.',
+                        6: 'Persistent hard work se rivals defeat, health precautions aur discipline se recovery.',
+                        7: 'Business contracts me clear terms, partners ke sath open communication maintain karein.',
+                        8: 'Deep meditative realization, occult analysis, ancestral property me patience.',
+                        9: 'Traditional spiritual discipline, deep philosophy aur ethical values me adherence.',
+                        10: 'Karmic perseverance, career stability, labor/management me patient leadership.',
+                        11: 'Mature friends network, delayed but lasting financial gains, realistic goal setting.',
+                        12: 'Deep solitude, sleep hygiene care, spiritual detachment aur silent meditation.'
+                    };
+                    if (specific[house]) return specific[house];
+                }
+
+                // 7. Mars + Rahu (Angarak Yoga)
                 if ((p1 === 'mars' && p2 === 'rahu') || (p1 === 'rahu' && p2 === 'mars')) {
                     return `Angarak impact: ${hData.phalaHinglish || hData.phalaHin}. Impulsive anger aur speed driving avoid karein.`;
                 }
@@ -742,7 +805,7 @@
             if (profile && conj.houseLagna) {
                 const userName = profile.name || 'Seeker';
                 const houseNum = conj.houseLagna;
-                body = `${userName} ji (${houseNum}th House me): 🎯 Outcome: ${outcome}`;
+                body = `${userName} ji (${getOrdinal(houseNum)} House me): 🎯 Outcome: ${outcome}`;
             } else {
                 body = `${p1}-${p2} close yuti in ${rashiEng} (<6°)! 🎯 Outcome: ${outcome}`;
             }
@@ -1272,7 +1335,7 @@
 
                 let ingressBody = '';
                 if (profile && insight.hasProfile) {
-                    ingressBody = `${insight.userName} ji (${insight.houseFromLagna}th House me): 🎯 Outcome: Guru dev Simha rashi me enter kar rahe hain. Creative intelligence, education aur luck me big boost!`;
+                    ingressBody = `${insight.userName} ji (${getOrdinal(insight.houseFromLagna)} House me): 🎯 Outcome: Guru dev Simha rashi me enter kar rahe hain. Creative intelligence, education aur luck me big boost!`;
                 } else {
                     ingressBody = `🎯 Outcome: Guru Simha rashi me gochar kar rahe hain. Leadership authority aur higher wisdom me growth.`;
                 }

@@ -443,6 +443,11 @@
 
         // Render Navagraha cards
         renderGrahaCards(data);
+
+        // Update real-time transit, conjunction (<6° orb) & astrological states manager
+        if (window.transitNotificationManager) {
+            window.transitNotificationManager.updateLiveCelestialState(data);
+        }
     }
 
     // Setup interactive event listeners

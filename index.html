@@ -555,13 +555,17 @@
             </div>
           </div>
 
-          <!-- Alert Items Section Header -->
-          <div class="flex items-center justify-between pt-1">
-            <span class="text-xs font-bold text-cosmic-slate flex items-center gap-1">
-              <span class="material-symbols-outlined text-primary text-[15px]">timelapse</span>
-              <span>Pivotal Planetary Transits (मुख्य गोचर)</span>
-            </span>
-            <span class="text-[10px] text-primary font-semibold">Real-Time Ephemeris</span>
+          <!-- Interactive Category Tabs: Conjunctions (<6°), Special States, Timeline -->
+          <div class="flex items-center gap-1 p-1 bg-surface-container-low rounded-xl border border-black/5 text-xs">
+            <button type="button" data-tab="conjunctions" class="alert-drawer-tab flex-1 py-1 px-1.5 rounded-lg text-center font-bold bg-primary-container text-on-primary shadow-sm transition-all flex items-center justify-center gap-1 text-[11px]">
+              <span>🔥 Conjunctions (<6°)</span>
+            </button>
+            <button type="button" data-tab="states" class="alert-drawer-tab flex-1 py-1 px-1.5 rounded-lg text-center font-medium text-muted-lavender hover:text-cosmic-slate transition-all flex items-center justify-center gap-1 text-[11px]">
+              <span>⚠️ States (Asta/Vakri)</span>
+            </button>
+            <button type="button" data-tab="timeline" class="alert-drawer-tab flex-1 py-1 px-1.5 rounded-lg text-center font-medium text-muted-lavender hover:text-cosmic-slate transition-all flex items-center justify-center gap-1 text-[11px]">
+              <span>📅 Timeline</span>
+            </button>
           </div>
 
           <!-- Dynamic Alerts List Container -->

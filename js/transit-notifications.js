@@ -1,16 +1,18 @@
 /**
- * transit-notifications.js — Real-Time Planetary Transit Notifications & Ingress Intelligence
+ * transit-notifications.js — High-Precision Transit, Conjunction (<6° Orb), & Astronomical State Engine
  * Grahamandal (ग्रह मंडल)
  *
- * Capabilities:
- * - Native Browser Web Notifications (via Notification API & Service Worker)
- * - Exact-time transit alerts with personalized Short Significance
- * - Deep-link / click to open Detailed Personalized Transit Modal
- * - Computes house activations from Natal Lagna & Moon (BPHS rules)
- * - Shani Sade Sati & Dhaiya ingress detection
- * - Devaguru Jupiter Guru Balam detection
- * - Vedic remedies (Mantras, Daan, Precautions)
- * - In-App Notification Center Drawer with live countdown timers & Test Notification button
+ * Astronomical & Astrological Capabilities:
+ * - Real-time planetary conjunction (Yuti) detection across all 9 Grahas
+ * - CRITICAL: High-intensity conjunction detection when degree difference is < 6° (Deepta / Asanna Yuti)
+ * - Planetary War (Graha Yuddha) detection when orb is < 1°
+ * - Real-time Combustion (Asta) calculation relative to Sun using classical Parashara limits
+ * - Retrograde (Vakri) Chesta Bala intensification tracking
+ * - Debilitation (Neecha) & Exaltation (Uccha) monitoring
+ * - Gandanta junction alert (Water-Fire zodiac threshold)
+ * - Mapping of every phenomenon directly into user's Natal Lagna & Moon houses
+ * - Classical Brihat Parashara Hora Shastra interpretations & Vedic remedies
+ * - Native Browser Web Push Notifications & In-App Notification Center Drawer
  */
 
 (function (window) {
@@ -31,6 +33,127 @@
         ketu: { name: 'Ketu', hin: 'केतु', emoji: '⬛', color: '#4b5563', symbol: '☋', title: 'Ketu' }
     };
 
+    // Classical Combustion (Asta) Orbs from Sun (in degrees)
+    const COMBUSTION_LIMITS = {
+        moon: 12.0,
+        mars: 17.0,
+        mercury_direct: 14.0,
+        mercury_retro: 12.0,
+        jupiter: 11.0,
+        venus_direct: 10.0,
+        venus_retro: 8.0,
+        saturn: 15.0
+    };
+
+    // Classical Conjunction (Yuti) Profiles
+    const KNOWN_YUTIS = {
+        'sun-mercury': {
+            nameHin: 'बुधादित्य राजयोग (Budhaditya Yoga)',
+            nameEng: 'Budhaditya Yoga (Sun + Mercury)',
+            themeHin: 'तीक्ष्ण बुद्धि, प्रशासनिक कुशलता, वाणिज्य व मान-सम्मान में वृद्धि',
+            themeEng: 'High intellect, executive administrative skill, and commercial acclaim',
+            benefic: true
+        },
+        'moon-jupiter': {
+            nameHin: 'गजकेसरी राजयोग (Gajakesari Yoga)',
+            nameEng: 'Gajakesari Yoga (Moon + Jupiter)',
+            themeHin: 'अखंड कीर्ति, सद्बुद्धि, संपदा, संतान सुख व धर्म लाभ',
+            themeEng: 'Enduring reputation, wisdom, prosperity, and divine fortune',
+            benefic: true
+        },
+        'mercury-venus': {
+            nameHin: 'लक्ष्मी-नारायण योग (Lakshmi-Narayana Yoga)',
+            nameEng: 'Lakshmi-Narayana Yoga (Mercury + Venus)',
+            themeHin: 'कला, सौंदर्य, मधुर वाणी, विलासिता व आकस्मिक धन लाभ',
+            themeEng: 'Fine arts, diplomacy, aesthetic charm, and financial elegance',
+            benefic: true
+        },
+        'mars-saturn': {
+            nameHin: 'शनि-मंगल द्वंद्व युति (Yama-Mangal)',
+            nameEng: 'Saturn-Mars Mutual Clash (Yama-Mangal)',
+            themeHin: 'कठिन कर्म संघर्ष, मशीनी-तकनीकी श्रम, धैर्य व चोट-विवाद से सतर्कता',
+            themeEng: 'Intense karmic friction, engineering drive, vigilance with friction and haste',
+            benefic: false
+        },
+        'moon-saturn': {
+            nameHin: 'विष योग / पुनर्फू (Visha Yoga)',
+            nameEng: 'Visha / Punaphoo Yoga (Moon + Saturn)',
+            themeHin: 'मानसिक भारीपन, कार्यों में विलंब, वैराग्य व गहन आत्म-साधना',
+            themeEng: 'Psychological weight, delays, detachment, and deep meditation',
+            benefic: false
+        },
+        'jupiter-rahu': {
+            nameHin: 'गुरु चांडाल योग (Guru Chandal Yoga)',
+            nameEng: 'Guru Chandal Yoga (Jupiter + Rahu)',
+            themeHin: 'अपरंपरागत विचार, नीतिगत व नैतिक परीक्षाएं, धार्मिक संशय से बचाव',
+            themeEng: 'Unconventional philosophies, moral scrutiny, and breakthrough innovation',
+            benefic: false
+        },
+        'mars-rahu': {
+            nameHin: 'अंगारक योग (Angarak Yoga)',
+            nameEng: 'Angarak Yoga (Mars + Rahu)',
+            themeHin: 'उग्र अग्नि ऊर्जा, विस्फोटक पराक्रम, जल्दबाजी व क्रोध पर संयम आवश्यक',
+            themeEng: 'Volatile fire energy, high ambition, avoid impulsive temper',
+            benefic: false
+        },
+        'sun-saturn': {
+            nameHin: 'सूर्य-शनि पिता-पुत्र युति',
+            nameEng: 'Sun-Saturn Conjunction',
+            themeHin: 'अधिकार संघर्ष, आत्म-अनुशासन की परीक्षा, वरिष्ठों व पिता का सम्मान रखें',
+            themeEng: 'Authority challenges, strict discipline, honor superiors and father',
+            benefic: false
+        },
+        'sun-rahu': {
+            nameHin: 'सूर्य ग्रहण दोष (Surya Grahan Alignment)',
+            nameEng: 'Solar Eclipse Alignment (Sun + Rahu)',
+            themeHin: 'आत्म-विश्वास की परीक्षा, मान-प्रतिष्ठा में सजगता, सात्विक आचरण रखें',
+            themeEng: 'Vitality tests, career re-evaluation, maintain integrity',
+            benefic: false
+        },
+        'moon-rahu': {
+            nameHin: 'चंद्र ग्रहण दोष (Chandra Grahan Alignment)',
+            nameEng: 'Lunar Eclipse Alignment (Moon + Rahu)',
+            themeHin: 'अति-संवेदनशीलता, अनिद्रा, भ्रम व गहन अंतर्ज्ञान का समय',
+            themeEng: 'Emotional turbulence, vivid intuition, avoid anxiety',
+            benefic: false
+        },
+        'jupiter-ketu': {
+            nameHin: 'गणेश / कैवल्य योग (Ganesha Yoga)',
+            nameEng: 'Ganesha / Kaivalya Yoga (Jupiter + Ketu)',
+            themeHin: 'परम आध्यात्मिक ज्ञान, मोक्ष जिज्ञासा, ज्योतिष व पूर्व जन्म पुण्य जागृति',
+            themeEng: 'Supreme spiritual insight, moksha aspiration, esoteric mastery',
+            benefic: true
+        },
+        'mars-ketu': {
+            nameHin: 'कुज-केतु पिचाश / गुप्त युति',
+            nameEng: 'Mars-Ketu Occult Fire Alignment',
+            themeHin: 'गूढ़ अंतर्दृष्टि, शल्य चिकित्सा, असाधारण साहस व चोट से सावधानी',
+            themeEng: 'Penetrating analytical bravery, medical/surgical power, caution with tools',
+            benefic: false
+        },
+        'venus-saturn': {
+            nameHin: 'शुक्र-शनि कर्म-कला युति',
+            nameEng: 'Venus-Saturn Practical Artistry',
+            themeHin: 'कला व वास्तुकला में शिल्पकारी, संबंधों में परिपक्वता, धीमा स्थायित्व',
+            themeEng: 'Craftsmanship, serious approach to relationships, enduring commitments',
+            benefic: true
+        },
+        'sun-mars': {
+            nameHin: 'सूर्य-मंगल महातेजस्वी युति',
+            nameEng: 'Sun-Mars Dynamic Fire Alignment',
+            themeHin: 'अतुल्य साहस, नेतृत्व शक्ति, प्रशासनिक विजय, पित्त विकार से बचाव',
+            themeEng: 'Formidable executive vigor, commanding leadership, watch blood pressure',
+            benefic: true
+        },
+        'sun-moon': {
+            nameHin: 'अमावस्या योग (Sun + Moon New Moon)',
+            nameEng: 'Amavasya Conjunction (Sun + Moon)',
+            themeHin: 'आत्म-मंथन, ऊर्जा संचय, पूर्वज तर्पण व ध्यान साधना',
+            themeEng: 'New moon introspective portal, meditation, rest and rejuvenation',
+            benefic: false
+        }
+    };
+
     // Master list of historical and upcoming pivotal transit events (2026–2028)
     const TRANSIT_EVENTS_DB = [
         {
@@ -39,8 +162,8 @@
             date: '2026-06-02',
             time: '04:18 IST',
             timestamp: new Date('2026-06-02T04:18:00+05:30').getTime(),
-            fromSignIdx: 2, // Gemini
-            toSignIdx: 3,   // Cancer
+            fromSignIdx: 2,
+            toSignIdx: 3,
             nakshatra: 'Punarvasu Pada 4',
             titleEng: 'Jupiter Ingress into Cancer (Exalted Guru ⭐)',
             titleHin: 'देवगुरु बृहस्पति का कर्क राशि में प्रवेश (परमोच्च)',
@@ -56,8 +179,8 @@
             date: '2026-10-31',
             time: '19:25 IST',
             timestamp: new Date('2026-10-31T19:25:00+05:30').getTime(),
-            fromSignIdx: 3, // Cancer
-            toSignIdx: 4,   // Leo
+            fromSignIdx: 3,
+            toSignIdx: 4,
             nakshatra: 'Magha Pada 1',
             titleEng: 'Jupiter Ingress into Leo (Guru Simha Rashi)',
             titleHin: 'देवगुरु बृहस्पति का सिंह राशि में प्रवेश',
@@ -73,8 +196,8 @@
             date: '2026-11-16',
             time: '07:12 IST',
             timestamp: new Date('2026-11-16T07:12:00+05:30').getTime(),
-            fromSignIdx: 6, // Libra
-            toSignIdx: 7,   // Scorpio
+            fromSignIdx: 6,
+            toSignIdx: 7,
             nakshatra: 'Anuradha Pada 1',
             titleEng: 'Sun Ingress into Scorpio (Vrischika Sankranti)',
             titleHin: 'सूर्य का वृश्चिक राशि में प्रवेश (वृश्चिक संक्रांति)',
@@ -90,7 +213,7 @@
             date: '2026-11-12',
             time: '08:42 IST',
             timestamp: new Date('2026-11-12T08:42:00+05:30').getTime(),
-            fromSignIdx: 4, // Leo
+            fromSignIdx: 4,
             toSignIdx: 4,
             nakshatra: 'Purva Phalguni',
             titleEng: 'Mars Stationary Retrograde in Leo (Vakri Mangal ⚠️)',
@@ -107,7 +230,7 @@
             date: '2026-12-05',
             time: '21:10 IST',
             timestamp: new Date('2026-12-05T21:10:00+05:30').getTime(),
-            fromSignIdx: 11, // Pisces
+            fromSignIdx: 11,
             toSignIdx: 11,
             nakshatra: 'Uttara Bhadrapada',
             titleEng: 'Saturn Turns Direct in Pisces (Shani Margi)',
@@ -124,8 +247,8 @@
             date: '2026-12-18',
             time: '14:35 IST',
             timestamp: new Date('2026-12-18T14:35:00+05:30').getTime(),
-            fromSignIdx: 7, // Scorpio
-            toSignIdx: 8,   // Sagittarius
+            fromSignIdx: 7,
+            toSignIdx: 8,
             nakshatra: 'Mula Pada 1',
             titleEng: 'Venus Ingress into Sagittarius (Dhanu Shukra)',
             titleHin: 'शुक्र का धनु राशि में प्रवेश',
@@ -141,8 +264,8 @@
             date: '2027-01-14',
             time: '15:20 IST',
             timestamp: new Date('2027-01-14T15:20:00+05:30').getTime(),
-            fromSignIdx: 8, // Sagittarius
-            toSignIdx: 9,   // Capricorn
+            fromSignIdx: 8,
+            toSignIdx: 9,
             nakshatra: 'Uttara Ashadha Pada 2',
             titleEng: 'Makar Sankranti — Sun Ingress to Capricorn (मकर संक्रांति)',
             titleHin: 'मकर संक्रांति: सूर्य का मकर राशि में प्रवेश (उत्तरायण प्रारंभ)',
@@ -158,8 +281,8 @@
             date: '2027-01-25',
             time: '10:40 IST',
             timestamp: new Date('2027-01-25T10:40:00+05:30').getTime(),
-            fromSignIdx: 4, // Leo
-            toSignIdx: 3,   // Cancer
+            fromSignIdx: 4,
+            toSignIdx: 3,
             nakshatra: 'Ashlesha Pada 4',
             titleEng: 'Jupiter Retrograde Return to Cancer (Exalted Peak ⭐)',
             titleHin: 'वक्री गुरु की पुनः कर्क राशि में वापसी (परमोच्च काल)',
@@ -175,9 +298,11 @@
         constructor() {
             this.storageKey = 'grahamandal_transit_notifications_v1';
             this.permissionStatusKey = 'grahamandal_notifications_enabled';
-            this.unreadCount = 2;
+            this.unreadCount = 3;
             this.notificationsEnabled = false;
             this.activeModalTransit = null;
+            this.liveCelestialData = null;
+            this.activeDrawerTab = 'conjunctions'; // 'conjunctions' | 'states' | 'timeline'
 
             this.init();
         }
@@ -245,9 +370,27 @@
                 }
             });
 
+            this.setupDrawerTabs();
             this.updateBadgeCountUI();
             this.renderAlertsList();
             this.updateNotificationToggleUI();
+        }
+
+        setupDrawerTabs() {
+            const tabBtns = document.querySelectorAll('.alert-drawer-tab');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    this.activeDrawerTab = btn.getAttribute('data-tab') || 'conjunctions';
+                    tabBtns.forEach(b => {
+                        b.classList.remove('bg-primary-container', 'text-on-primary', 'font-bold', 'shadow-sm');
+                        b.classList.add('bg-surface-container-low', 'text-muted-lavender', 'font-medium');
+                    });
+                    btn.classList.add('bg-primary-container', 'text-on-primary', 'font-bold', 'shadow-sm');
+                    btn.classList.remove('bg-surface-container-low', 'text-muted-lavender', 'font-medium');
+
+                    this.renderAlertsList();
+                });
+            });
         }
 
         checkURLParams() {
@@ -278,6 +421,221 @@
             }
         }
 
+        /**
+         * Called from graha-tracker.js during updateDashboard with live celestial calculation results
+         */
+        updateLiveCelestialState(data) {
+            this.liveCelestialData = data;
+            // If drawer is currently open, refresh dynamic conjunction cards
+            const drawer = document.getElementById('transit-alerts-drawer');
+            if (drawer && !drawer.classList.contains('hidden')) {
+                this.renderAlertsList();
+            }
+        }
+
+        // ==========================================
+        // CONJUNCTION (<6° ORB), COMBUSTION & MOTION ENGINE
+        // ==========================================
+
+        /**
+         * Calculates all active Conjunctions, Degree Separations (<6°), Combustions,
+         * Retrogrades, Debilitations & Gandantas from live planetary details
+         */
+        calculateLiveAstrologicalPhenomena(planetaryDetails, userProfile) {
+            if (!planetaryDetails) return { conjunctions: [], states: [] };
+
+            const pList = ['sun', 'moon', 'mars', 'mercury', 'jupiter', 'venus', 'saturn', 'rahu', 'ketu'];
+            const conjunctions = [];
+            const states = [];
+
+            const sunDetail = planetaryDetails.sun;
+            const sunLong = sunDetail ? sunDetail.longitude : 0;
+
+            // 1. CONJUNCTIONS & DEGREE DIFFERENCE (< 6° ORB & < 1° GRAHA YUDDHA)
+            for (let i = 0; i < pList.length; i++) {
+                for (let j = i + 1; j < pList.length; j++) {
+                    const p1 = pList[i];
+                    const p2 = pList[j];
+                    const d1 = planetaryDetails[p1];
+                    const d2 = planetaryDetails[p2];
+
+                    if (!d1 || !d2) continue;
+
+                    const sign1 = Math.floor(d1.longitude / 30);
+                    const sign2 = Math.floor(d2.longitude / 30);
+
+                    // Check if both planets occupy the same sign
+                    if (sign1 === sign2) {
+                        const deg1 = d1.degree !== undefined ? d1.degree : (d1.longitude % 30);
+                        const deg2 = d2.degree !== undefined ? d2.degree : (d2.longitude % 30);
+                        const degDiff = Math.abs(deg1 - deg2);
+                        const degInt = Math.floor(degDiff);
+                        const minInt = Math.round((degDiff - degInt) * 60);
+                        const orbStr = `${degInt}°${String(minInt).padStart(2, '0')}'`;
+
+                        const isHighImpact = degDiff <= 6.0;
+                        const isGrahaYuddha = degDiff <= 1.0 && !['sun', 'moon', 'rahu', 'ketu'].includes(p1) && !['sun', 'moon', 'rahu', 'ketu'].includes(p2);
+
+                        // Lookup known yoga profile
+                        const pairKey1 = `${p1}-${p2}`;
+                        const pairKey2 = `${p2}-${p1}`;
+                        const known = KNOWN_YUTIS[pairKey1] || KNOWN_YUTIS[pairKey2] || null;
+
+                        const meta1 = PLANET_META[p1];
+                        const meta2 = PLANET_META[p2];
+                        const rashiHin = RASHIS_HIN[sign1];
+                        const rashiEng = RASHIS_ENG[sign1];
+
+                        // Calculate native house activations if profile exists
+                        let houseLagna = null;
+                        let houseMoon = null;
+                        if (userProfile && userProfile.ascSign !== undefined) {
+                            houseLagna = ((sign1 - userProfile.ascSign + 12) % 12) + 1;
+                            houseMoon = ((sign1 - userProfile.moonSign + 12) % 12) + 1;
+                        }
+
+                        conjunctions.push({
+                            id: `yuti-${pairKey1}`,
+                            p1,
+                            p2,
+                            meta1,
+                            meta2,
+                            signIdx: sign1,
+                            rashiHin,
+                            rashiEng,
+                            deg1,
+                            deg2,
+                            degDiff,
+                            orbStr,
+                            isHighImpact,
+                            isGrahaYuddha,
+                            known,
+                            houseLagna,
+                            houseMoon,
+                            titleHin: known ? known.nameHin : `${meta1.hin}-${meta2.hin} युति (${rashiHin})`,
+                            titleEng: known ? known.nameEng : `${meta1.name}-${meta2.name} Conjunction in ${rashiEng}`
+                        });
+                    }
+                }
+            }
+
+            // Sort conjunctions: High-impact (<6°) first, then lowest degree difference
+            conjunctions.sort((a, b) => a.degDiff - b.degDiff);
+
+            // 2. COMBUSTIONS (ASTA / अस्त), RETROGRADE (VAKRI), DEBILITATION (NEECHA)
+            pList.forEach(p => {
+                const d = planetaryDetails[p];
+                if (!d) return;
+
+                const meta = PLANET_META[p];
+                const signIdx = Math.floor(d.longitude / 30);
+                const rashiHin = RASHIS_HIN[signIdx];
+                const rashiEng = RASHIS_ENG[signIdx];
+                const degInSign = d.degree !== undefined ? d.degree : (d.longitude % 30);
+
+                // A. Combustion (Asta)
+                if (p !== 'sun' && p !== 'rahu' && p !== 'ketu') {
+                    let diffFromSun = Math.abs(d.longitude - sunLong);
+                    if (diffFromSun > 180) diffFromSun = 360 - diffFromSun;
+
+                    let limit = COMBUSTION_LIMITS[p];
+                    if (p === 'mercury') limit = d.isRetrograde ? COMBUSTION_LIMITS.mercury_retro : COMBUSTION_LIMITS.mercury_direct;
+                    if (p === 'venus') limit = d.isRetrograde ? COMBUSTION_LIMITS.venus_retro : COMBUSTION_LIMITS.venus_direct;
+
+                    if (diffFromSun <= limit) {
+                        const degInt = Math.floor(diffFromSun);
+                        const minInt = Math.round((diffFromSun - degInt) * 60);
+                        states.push({
+                            type: 'combust',
+                            planet: p,
+                            meta,
+                            signIdx,
+                            rashiHin,
+                            rashiEng,
+                            diffFromSun,
+                            orbStr: `${degInt}°${String(minInt).padStart(2, '0')}' from Sun`,
+                            titleHin: `${meta.hin} अस्त (Combust / सूर्य सामीप्य)`,
+                            titleEng: `${meta.name} Combust (Asta)`,
+                            descHin: `${meta.hin} सूर्य से मात्र ${degInt}°${minInt}' की दूरी पर हैं (अस्त सीमा: ${limit}°)। ग्रह की बाह्य शक्ति सूर्य के तेज में समाहित है। संबंधित विषयों में धैर्य रखें।`,
+                            descEng: `${meta.name} is within ${limit}° of Sun. Its external significations require inner contemplation.`
+                        });
+                    }
+                }
+
+                // B. Retrograde (Vakri)
+                if (d.isRetrograde && p !== 'rahu' && p !== 'ketu') {
+                    states.push({
+                        type: 'retrograde',
+                        planet: p,
+                        meta,
+                        signIdx,
+                        rashiHin,
+                        rashiEng,
+                        titleHin: `${meta.hin} वक्री (Retrograde ℞)`,
+                        titleEng: `${meta.name} Retrograde (Vakri)`,
+                        descHin: `${meta.hin} ${rashiHin} राशि में वक्री गति में हैं। चेष्टा बल अत्यधिक प्रबल है। पुराने कर्मों की समीक्षा, पुनर्मूल्यांकन व आत्म-निरीक्षण का समय।`,
+                        descEng: `${meta.name} in reverse sidereal motion possessing high Chesta Bala. Prompts review of past karmic threads.`
+                    });
+                }
+
+                // C. Debilitation (Neecha)
+                if (d.status === 'Debilitated') {
+                    states.push({
+                        type: 'debilitated',
+                        planet: p,
+                        meta,
+                        signIdx,
+                        rashiHin,
+                        rashiEng,
+                        titleHin: `${meta.hin} नीच राशि में (Debilitated / नीच)`,
+                        titleEng: `${meta.name} Debilitated (Neecha)`,
+                        descHin: `${meta.hin} ${rashiHin} राशि में नीच अवस्था में गोचर कर रहे हैं। इस ग्रह के कारक तत्वों में सावधानी, मंत्र जप व दान श्रेयस्कर है।`,
+                        descEng: `${meta.name} in its fall/debilitation sign. Diligent remedies and conscious action recommended.`
+                    });
+                }
+
+                // D. Exaltation (Uccha)
+                if (d.status === 'Exalted') {
+                    states.push({
+                        type: 'exalted',
+                        planet: p,
+                        meta,
+                        signIdx,
+                        rashiHin,
+                        rashiEng,
+                        titleHin: `${meta.hin} परमोच्च (Exalted / उच्च ⭐)`,
+                        titleEng: `${meta.name} Exalted (Uccha)`,
+                        descHin: `${meta.hin} अपनी सर्वोच्च राशि ${rashiHin} में उच्च के होकर गतिमान हैं। सर्वोच्च शुभ फल प्रदाता।`,
+                        descEng: `${meta.name} operates at peak dignity in ${rashiEng}. Auspicious manifestations favored.`
+                    });
+                }
+
+                // E. Gandanta Junction Alert
+                const junctions = [0, 120, 240];
+                for (const j of junctions) {
+                    let gDiff = Math.abs(d.longitude - j);
+                    if (gDiff > 180) gDiff = 360 - gDiff;
+                    if (gDiff <= 3.333) {
+                        states.push({
+                            type: 'gandanta',
+                            planet: p,
+                            meta,
+                            signIdx,
+                            rashiHin,
+                            rashiEng,
+                            titleHin: `⚠️ ${meta.hin} गंडान्त संधि पर (Gandanta Junction)`,
+                            titleEng: `${meta.name} at Gandanta Junction`,
+                            descHin: `${meta.hin} जल व अग्नि राशि की संवेदनशील संधि पर हैं। आध्यात्मिक परिवर्तन व भावुक निर्णयों में विशेष सजगता रखें।`,
+                            descEng: `${meta.name} transits the karmic knot between Water and Fire signs.`
+                        });
+                        break;
+                    }
+                }
+            });
+
+            return { conjunctions, states };
+        }
+
         // ==========================================
         // PERSONALIZED INGRESS INTELLIGENCE ENGINE
         // ==========================================
@@ -292,7 +650,6 @@
             const toRashiHin = RASHIS_HIN[toSignIdx];
 
             if (!userProfile || !userProfile.birthChart) {
-                // Generic insight when no user profile is saved
                 return {
                     hasProfile: false,
                     grahaMeta,
@@ -308,7 +665,6 @@
                 };
             }
 
-            // User has a saved birth profile!
             const natalAscSign = userProfile.ascSign;
             const natalMoonSign = userProfile.moonSign;
             const userName = userProfile.name || 'साधक';
@@ -323,7 +679,6 @@
             let sadeSatiAlert = null;
             let guruBalamAlert = null;
 
-            // Specialized Graha Rules: Saturn (Sade Sati / Dhaiya)
             if (transitEvent.graha === 'saturn') {
                 if (houseFromMoon === 12) {
                     sadeSatiAlert = 'साढ़ेसाती: प्रथम चरण (उदित / 1st Phase)';
@@ -405,7 +760,6 @@
                 shortSignificanceEng = `${userName}, ${grahaMeta.name} ingress to ${toRashiEng} activates house ${houseFromLagna} from your Lagna.`;
             }
 
-            // Detailed category predictions
             const houseThemes = {
                 1: 'व्यक्तित्व, स्वास्थ्य, आत्म-विश्वास व नई शुरुआत',
                 2: 'धन-संपत्ति, कुटुंब, वाणी व बचत',
@@ -503,8 +857,8 @@
                 const granted = await this.requestNotificationPermission();
                 if (granted) {
                     this.sendNativePushAlert({
-                        title: '🔔 Transit Alerts Activated (गोचर सूचनाएं सक्रिय)',
-                        body: 'Grahamandal will now notify you the exact moment any planet ingresses, with personalized insights tailored to your chart.',
+                        title: '🔔 Transit & Conjunction Alerts Active (गोचर व युति सूचनाएं)',
+                        body: 'Grahamandal will notify you during exact planetary ingresses and deep conjunctions (<6° orb) with personalized chart impact.',
                         transitId: 'jupiter-cancer-exalted-2026'
                     });
                 }
@@ -526,7 +880,7 @@
                 if (toggleIcon) toggleIcon.textContent = 'notifications_active';
                 if (toggleLabel) toggleLabel.textContent = 'Alerts: ON (सक्रिय)';
                 if (statusBadge) {
-                    statusBadge.textContent = 'Live Push Enabled';
+                    statusBadge.textContent = 'Live Push & <6° Orb Alerts Enabled';
                     statusBadge.className = 'text-[10px] text-secondary font-semibold';
                 }
             } else {
@@ -550,7 +904,6 @@
                 tag: 'grahamandal-transit-' + (transitId || Date.now())
             };
 
-            // If ServiceWorker registration is ready, show rich notification through SW
             if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
                 navigator.serviceWorker.ready.then(reg => {
                     reg.showNotification(title, options);
@@ -568,7 +921,6 @@
         }
 
         async sendTestNotification() {
-            // Check permission
             if (!('Notification' in window) || Notification.permission !== 'granted') {
                 const granted = await this.requestNotificationPermission();
                 if (!granted) {
@@ -577,21 +929,46 @@
                 }
             }
 
-            // Pick upcoming or pivotal transit
-            const testEvent = TRANSIT_EVENTS_DB[1]; // Jupiter to Leo
             const profile = (window.personalTransit && window.personalTransit.profile) ? window.personalTransit.profile : null;
-            const insight = this.getPersonalizedTransitInsight(testEvent, profile);
 
-            const title = `${insight.grahaMeta.emoji} ${testEvent.titleHin || testEvent.titleEng}`;
-            const body = insight.shortSignificanceHin;
+            // Check if there is an active live conjunction < 6° in the sky right now
+            let activeConjunction = null;
+            if (this.liveCelestialData && this.liveCelestialData.planetaryDetails) {
+                const { conjunctions } = this.calculateLiveAstrologicalPhenomena(this.liveCelestialData.planetaryDetails, profile);
+                if (conjunctions.length > 0) {
+                    activeConjunction = conjunctions[0]; // Nearest conjunction
+                }
+            }
 
-            this.sendNativePushAlert({
-                title: title,
-                body: body,
-                transitId: testEvent.id
-            });
+            if (activeConjunction && activeConjunction.isHighImpact) {
+                // Send high-impact Conjunction alert (<6° orb)
+                const p1Hin = activeConjunction.meta1.hin;
+                const p2Hin = activeConjunction.meta2.hin;
+                const rashiHin = activeConjunction.rashiHin;
+                const orb = activeConjunction.orbStr;
 
-            // Decrement badge count
+                let body = `तीव्र ग्रह युति: ${p1Hin} और ${p2Hin} ${rashiHin} राशि में मात्र ${orb} के अंतर पर हैं (<6° दीप्तांश)!`;
+                if (profile) {
+                    body = `${profile.name} जी: आपके लग्न से ${activeConjunction.houseLagna}वें भाव में ${p1Hin}-${p2Hin} युति (<6° तीव्र प्रभाव)! विस्तृत फल देखें।`;
+                }
+
+                this.sendNativePushAlert({
+                    title: `🔥 ${activeConjunction.titleHin} (Orb: ${orb})`,
+                    body: body,
+                    transitId: activeConjunction.id
+                });
+            } else {
+                // Send Ingress alert
+                const testEvent = TRANSIT_EVENTS_DB[1]; // Jupiter to Leo
+                const insight = this.getPersonalizedTransitInsight(testEvent, profile);
+
+                this.sendNativePushAlert({
+                    title: `${insight.grahaMeta.emoji} ${testEvent.titleHin || testEvent.titleEng}`,
+                    body: insight.shortSignificanceHin,
+                    transitId: testEvent.id
+                });
+            }
+
             if (this.unreadCount > 0) this.unreadCount--;
             this.updateBadgeCountUI();
         }
@@ -616,7 +993,6 @@
             const drawer = document.getElementById('transit-alerts-drawer');
             if (drawer) {
                 drawer.classList.remove('hidden');
-                // Re-render list with live countdowns
                 this.renderAlertsList();
                 this.updateNotificationToggleUI();
             }
@@ -632,8 +1008,169 @@
             if (!listEl) return;
 
             const profile = (window.personalTransit && window.personalTransit.profile) ? window.personalTransit.profile : null;
-            const now = Date.now();
+            const planetaryDetails = (this.liveCelestialData && this.liveCelestialData.planetaryDetails) ? this.liveCelestialData.planetaryDetails : null;
 
+            // TAB 1: CONJUNCTIONS (< 6° ORB & YUTIS)
+            if (this.activeDrawerTab === 'conjunctions') {
+                if (!planetaryDetails) {
+                    listEl.innerHTML = `<div class="p-4 text-center text-xs text-muted-lavender bg-white rounded-xl">Calculating live planetary coordinates...</div>`;
+                    return;
+                }
+
+                const { conjunctions } = this.calculateLiveAstrologicalPhenomena(planetaryDetails, profile);
+
+                if (conjunctions.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="p-4 text-center text-xs text-muted-lavender bg-surface-container-lowest rounded-xl border border-black/5">
+                            <span class="material-symbols-outlined text-2xl text-primary mb-1 block">check_circle</span>
+                            <span>वर्तमान में कोई ग्रह एक ही राशि में स्थित नहीं हैं। सभी ग्रह पृथक राशियों में गतिशील हैं।</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                conjunctions.forEach(c => {
+                    const orbBadge = c.isGrahaYuddha
+                        ? `<span class="px-2 py-0.5 rounded-full text-[10px] bg-retrograde-ruby text-white font-bold animate-pulse">⚡ ग्रह युद्ध (Orb < 1°)</span>`
+                        : c.isHighImpact
+                        ? `<span class="px-2 py-0.5 rounded-full text-[10px] bg-tertiary-container text-white font-bold animate-pulse">🔥 तीव्र युति (<6° Orb)</span>`
+                        : `<span class="px-2 py-0.5 rounded-full text-[10px] bg-surface-container-high text-cosmic-slate font-semibold">Orb: ${c.orbStr}</span>`;
+
+                    const yogaBadge = c.known
+                        ? `<span class="px-2 py-0.5 rounded-full text-[10px] ${c.known.benefic ? 'bg-secondary/15 text-secondary' : 'bg-retrograde-ruby/15 text-retrograde-ruby'} font-bold">${c.known.nameHin.split(' ')[0]}</span>`
+                        : '';
+
+                    let houseInfo = '';
+                    if (profile && c.houseLagna) {
+                        houseInfo = `
+                            <div class="flex items-center gap-1.5 pt-1 text-[11px] font-semibold text-primary">
+                                <span>${profile.name} के लग्न से: <strong>${c.houseLagna}वां भाव</strong></span>
+                                <span>•</span>
+                                <span>चंद्र से: <strong>${c.houseMoon}वां भाव</strong></span>
+                            </div>
+                        `;
+                    }
+
+                    html += `
+                        <div class="flex flex-col bg-surface-container-lowest p-3 rounded-xl border ${c.isHighImpact ? 'border-primary/40 shadow-md' : 'border-black/5 shadow-sm'} space-y-2 hover:border-gold-border-focus transition-all cursor-pointer group" data-conjunction-id="${c.id}">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <div class="flex items-center -space-x-1 shrink-0">
+                                        <span class="w-7 h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm shadow-sm border border-primary/20 z-10">${c.meta1.emoji}</span>
+                                        <span class="w-7 h-7 rounded-full bg-secondary/10 text-secondary flex items-center justify-center text-sm shadow-sm border border-secondary/20">${c.meta2.emoji}</span>
+                                    </div>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold text-xs sm:text-sm text-cosmic-slate leading-tight truncate group-hover:text-primary transition-colors">
+                                            ${c.titleHin}
+                                        </span>
+                                        <span class="text-[10px] text-muted-lavender">
+                                            in ${c.rashiHin} (${c.rashiEng}) • अंतर: <strong>${c.orbStr}</strong>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="shrink-0 flex items-center gap-1">
+                                    ${orbBadge}
+                                </div>
+                            </div>
+
+                            <div class="p-2 rounded-lg ${c.isHighImpact ? 'bg-primary-container/10 border border-primary/20' : 'bg-parchment-container/60 border border-black/5'} text-[11px] text-on-surface-variant leading-relaxed">
+                                <div class="flex items-center gap-1 font-semibold text-cosmic-slate text-[10px] mb-0.5">
+                                    <span class="material-symbols-outlined text-[13px] text-primary">psychology</span>
+                                    <span>${c.known ? c.known.nameEng : 'Conjunction Impact'}:</span>
+                                    ${yogaBadge}
+                                </div>
+                                <p class="text-[11px]">${c.known ? c.known.themeHin : `${c.meta1.hin} और ${c.meta2.hin} की संयुक्त ऊर्जा सक्रिय है।`}</p>
+                                ${houseInfo}
+                            </div>
+
+                            <div class="flex items-center justify-between pt-1 border-t border-black/5 text-[11px]">
+                                <span class="text-[10px] text-muted-lavender">
+                                    ${c.meta1.hin}: ${c.deg1.toFixed(1)}° • ${c.meta2.hin}: ${c.deg2.toFixed(1)}°
+                                </span>
+                                <span class="text-primary font-bold hover:underline flex items-center gap-0.5 text-[11px]">
+                                    <span>Detailed Analysis</span>
+                                    <span class="material-symbols-outlined text-[13px]">arrow_forward</span>
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                listEl.innerHTML = html;
+
+                listEl.querySelectorAll('[data-conjunction-id]').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const id = item.getAttribute('data-conjunction-id');
+                        const conj = conjunctions.find(c => c.id === id);
+                        if (conj) {
+                            this.closeAlertsDrawer();
+                            this.openConjunctionDetailModal(conj, profile);
+                        }
+                    });
+                });
+                return;
+            }
+
+            // TAB 2: ASTRONOMICAL STATES (RETROGRADE, COMBUST, NEECHA, GANDANTA)
+            if (this.activeDrawerTab === 'states') {
+                if (!planetaryDetails) {
+                    listEl.innerHTML = `<div class="p-4 text-center text-xs text-muted-lavender bg-white rounded-xl">Calculating live planetary states...</div>`;
+                    return;
+                }
+
+                const { states } = this.calculateLiveAstrologicalPhenomena(planetaryDetails, profile);
+
+                if (states.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="p-4 text-center text-xs text-muted-lavender bg-surface-container-lowest rounded-xl border border-black/5">
+                            <span class="material-symbols-outlined text-2xl text-secondary mb-1 block">verified</span>
+                            <span>वर्तमान में सभी ग्रह सामान्य मार्गी व अनुकूल अवस्था में हैं। कोई ग्रह अस्त या वक्री नहीं है।</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                states.forEach((s, idx) => {
+                    let typeBadge = '';
+                    if (s.type === 'combust') {
+                        typeBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] bg-tertiary-container text-white font-bold">सूर्य अस्त (Combust)</span>';
+                    } else if (s.type === 'retrograde') {
+                        typeBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] bg-retrograde-ruby text-white font-bold">वक्री ℞ (Retrograde)</span>';
+                    } else if (s.type === 'debilitated') {
+                        typeBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] bg-retrograde-ruby/15 text-retrograde-ruby font-bold">नीच (Fall)</span>';
+                    } else if (s.type === 'exalted') {
+                        typeBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] bg-secondary text-white font-bold">परमोच्च (Exalted)</span>';
+                    } else if (s.type === 'gandanta') {
+                        typeBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] bg-tertiary/20 text-tertiary font-bold">गंडान्त (Knot)</span>';
+                    }
+
+                    html += `
+                        <div class="flex flex-col bg-surface-container-lowest p-3 rounded-xl border border-black/5 shadow-sm space-y-1.5 hover:border-gold-border-focus transition-all">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <span class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm shrink-0 shadow-sm border border-primary/20">${s.meta.emoji}</span>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold text-xs sm:text-sm text-cosmic-slate leading-tight truncate">${s.titleHin}</span>
+                                        <span class="text-[10px] text-muted-lavender">in ${s.rashiHin} (${s.rashiEng}) ${s.orbStr ? `• ${s.orbStr}` : ''}</span>
+                                    </div>
+                                </div>
+                                <div class="shrink-0">
+                                    ${typeBadge}
+                                </div>
+                            </div>
+                            <p class="text-[11px] text-on-surface-variant leading-relaxed pl-10">${s.descHin}</p>
+                        </div>
+                    `;
+                });
+
+                listEl.innerHTML = html;
+                return;
+            }
+
+            // TAB 3: TIMELINE (HISTORICAL & UPCOMING INGRESSES)
+            const now = Date.now();
             let html = '';
 
             TRANSIT_EVENTS_DB.forEach(event => {
@@ -665,7 +1202,6 @@
                             </div>
                         </div>
 
-                        <!-- Short Significance Summary Banner -->
                         <div class="p-2 rounded-lg bg-parchment-container/60 border border-black/5 text-[11px] text-on-surface-variant leading-relaxed">
                             <div class="flex items-center gap-1 font-semibold text-cosmic-slate text-[10px] mb-0.5">
                                 <span class="material-symbols-outlined text-[13px] text-primary">auto_awesome</span>
@@ -675,7 +1211,6 @@
                             <p class="text-[11px] line-clamp-2">${insight.shortSignificanceHin}</p>
                         </div>
 
-                        <!-- Action trigger -->
                         <div class="flex items-center justify-between pt-1 border-t border-black/5 text-[11px]">
                             <span class="text-[10px] text-muted-lavender">
                                 ${insight.hasProfile ? `Lagna: H${insight.houseFromLagna} • Moon: H${insight.houseFromMoon}` : 'Personal chart not linked'}
@@ -691,9 +1226,8 @@
 
             listEl.innerHTML = html;
 
-            // Attach click listeners to cards and buttons
             listEl.querySelectorAll('[data-transit-id]').forEach(item => {
-                item.addEventListener('click', (e) => {
+                item.addEventListener('click', () => {
                     const id = item.getAttribute('data-transit-id');
                     const ev = TRANSIT_EVENTS_DB.find(t => t.id === id);
                     if (ev) {
@@ -705,7 +1239,7 @@
         }
 
         // ==========================================
-        // DETAILED PERSONALIZED INGRESS MODAL
+        // DETAILED MODAL: INGRESS & CONJUNCTION VIEW
         // ==========================================
 
         openTransitDetailModal(transitEvent) {
@@ -717,7 +1251,6 @@
             const profile = (window.personalTransit && window.personalTransit.profile) ? window.personalTransit.profile : null;
             const insight = this.getPersonalizedTransitInsight(transitEvent, profile);
 
-            // Populate Modal Fields
             const titleEl = document.getElementById('modal-transit-title');
             const subtitleEl = document.getElementById('modal-transit-subtitle');
             const dateEl = document.getElementById('modal-transit-date');
@@ -734,7 +1267,6 @@
             if (dateEl) dateEl.textContent = `${transitEvent.date} (${transitEvent.time})`;
             if (emblemEl) emblemEl.textContent = insight.grahaMeta.emoji;
 
-            // Badges
             if (badgesContainer) {
                 let badgesHtml = `
                     <span class="px-2.5 py-0.5 rounded-full text-xs ${transitEvent.badgeClass}">
@@ -770,13 +1302,11 @@
                 badgesContainer.innerHTML = badgesHtml;
             }
 
-            // Predictions
             if (careerEl) careerEl.textContent = insight.careerPhalaHin;
             if (wealthEl) wealthEl.textContent = insight.wealthPhalaHin;
             if (healthEl) healthEl.textContent = insight.healthPhalaHin;
             if (remediesEl) remediesEl.textContent = insight.remediesHin;
 
-            // Profile status notice banner
             if (profileNoticeEl) {
                 if (insight.hasProfile) {
                     profileNoticeEl.innerHTML = `
@@ -813,6 +1343,95 @@
             modal.classList.remove('hidden');
         }
 
+        openConjunctionDetailModal(conj, profile) {
+            const modal = document.getElementById('transit-detail-modal');
+            const backdrop = document.getElementById('transit-detail-modal-backdrop');
+            if (!modal || !backdrop) return;
+
+            const titleEl = document.getElementById('modal-transit-title');
+            const subtitleEl = document.getElementById('modal-transit-subtitle');
+            const dateEl = document.getElementById('modal-transit-date');
+            const emblemEl = document.getElementById('modal-transit-emblem');
+            const badgesContainer = document.getElementById('modal-transit-badges-container');
+            const careerEl = document.getElementById('modal-transit-career');
+            const wealthEl = document.getElementById('modal-transit-wealth');
+            const healthEl = document.getElementById('modal-transit-health');
+            const remediesEl = document.getElementById('modal-transit-remedies');
+            const profileNoticeEl = document.getElementById('modal-profile-status-notice');
+
+            if (titleEl) titleEl.textContent = conj.titleHin;
+            if (subtitleEl) subtitleEl.textContent = `${conj.meta1.hin} (${conj.deg1.toFixed(1)}°) + ${conj.meta2.hin} (${conj.deg2.toFixed(1)}°) in ${conj.rashiHin} • अंतर: ${conj.orbStr}`;
+            if (dateEl) dateEl.textContent = `Live Sky Alignment (दीप्तांश: ${conj.orbStr})`;
+            if (emblemEl) emblemEl.textContent = `${conj.meta1.emoji}${conj.meta2.emoji}`;
+
+            if (badgesContainer) {
+                let badgeMarkup = `
+                    <span class="px-2.5 py-0.5 rounded-full text-xs ${conj.isHighImpact ? 'bg-retrograde-ruby text-white font-bold animate-pulse' : 'bg-primary-container text-on-primary font-bold'}">
+                        ${conj.isHighImpact ? '🔥 तीव्र युति (<6° Orb)' : `Orb: ${conj.orbStr}`}
+                    </span>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs bg-surface-container-high text-cosmic-slate font-bold">
+                        ${conj.rashiHin} (${conj.rashiEng})
+                    </span>
+                `;
+
+                if (profile && conj.houseLagna) {
+                    badgeMarkup += `
+                        <span class="px-2.5 py-0.5 rounded-full text-xs bg-primary/10 text-primary font-bold">
+                            लग्न से: ${conj.houseLagna}वां भाव
+                        </span>
+                        <span class="px-2.5 py-0.5 rounded-full text-xs bg-secondary/10 text-secondary font-bold">
+                            चंद्र से: ${conj.houseMoon}वां भाव
+                        </span>
+                    `;
+                }
+
+                badgesContainer.innerHTML = badgeMarkup;
+            }
+
+            const userName = profile ? (profile.name || 'साधक') : 'साधक';
+
+            if (careerEl) {
+                careerEl.textContent = conj.known
+                    ? `${conj.known.nameHin}: ${conj.known.themeHin}। कार्यक्षेत्र में इस युति की ऊर्जा सक्रिय रहेगी।`
+                    : `${conj.meta1.hin} और ${conj.meta2.hin} की संयुक्त ऊर्जा आपके कर्मक्षेत्र में नए समीकरण बनाएगी।`;
+            }
+
+            if (wealthEl) {
+                wealthEl.textContent = conj.isHighImpact
+                    ? `चूंकि दोनों ग्रहों में मात्र ${conj.orbStr} का अंतर है (<6° दीप्तांश), अतः आर्थिक निर्णयों में अत्यधिक तीव्रता रहेगी। बड़े निवेश सोच-समझकर करें।`
+                    : `आर्थिक दृष्टि से यह युति मध्यम व संतुलित प्रभाव देगी।`;
+            }
+
+            if (healthEl) {
+                healthEl.textContent = (conj.p1 === 'mars' || conj.p2 === 'mars' || conj.p1 === 'saturn' || conj.p2 === 'saturn' || conj.p1 === 'rahu' || conj.p2 === 'rahu')
+                    ? 'उग्र व पापक ग्रहों की नजदीकी युति होने से रक्तचाप, मानसिक तनाव व जल्दबाजी से बचें। योग व प्राणायाम अत्यंत हितकर है।'
+                    : 'मानसिक व शारीरिक स्वास्थ्य सामान्य व अनुकूल रहेगा।';
+            }
+
+            if (remediesEl) {
+                remediesEl.textContent = `${conj.meta1.hin} व ${conj.meta2.hin} के वैदिक मंत्रों का जप करें। हनुमान चालीसा व शिव आराधना से सभी प्रकार की युतियों का अशुभ प्रभाव शांत होता है।`;
+            }
+
+            if (profileNoticeEl) {
+                if (profile) {
+                    profileNoticeEl.innerHTML = `
+                        <div class="flex items-center justify-between text-xs p-2.5 rounded-xl bg-secondary/10 border border-secondary/20 text-secondary font-semibold">
+                            <span>यह युति ${userName} की कुंडली के ${conj.houseLagna}वें भाव (लग्न से) में फलित हो रही है।</span>
+                        </div>
+                    `;
+                } else {
+                    profileNoticeEl.innerHTML = `
+                        <div class="flex items-center justify-between text-xs p-2.5 rounded-xl bg-parchment-container border border-primary/30 text-cosmic-slate">
+                            <span>अपनी जन्म कुंडली जोड़ें ताकि यह युति सीधे आपके 12 भावों के अनुसार दिखे।</span>
+                        </div>
+                    `;
+                }
+            }
+
+            backdrop.classList.remove('hidden');
+            modal.classList.remove('hidden');
+        }
+
         closeDetailModal() {
             const modal = document.getElementById('transit-detail-modal');
             const backdrop = document.getElementById('transit-detail-modal-backdrop');
@@ -826,7 +1445,7 @@
             const insight = this.getPersonalizedTransitInsight(this.activeModalTransit, profile);
 
             const title = this.activeModalTransit.titleHin || this.activeModalTransit.titleEng;
-            const date = this.activeModalTransit.date;
+            const date = this.activeModalTransit.date || 'Live Sky';
             const text = `🪐 *${title}* (${date})\n\n${insight.shortSignificanceHin}\n\n🕉️ *उपाय:* ${insight.remediesHin}\n\n👉 *Live Gochar Kundali देखें:* https://grahamandal.pages.dev`;
             const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
             window.open(waUrl, '_blank');
